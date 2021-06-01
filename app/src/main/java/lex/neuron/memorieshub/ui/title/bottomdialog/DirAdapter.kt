@@ -6,22 +6,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import lex.neuron.memorieshub.data.entity.DirEntity
-import lex.neuron.memorieshub.data.entity.MemoEntity
-import lex.neuron.memorieshub.data.entity.TitleEntity
-import lex.neuron.memorieshub.databinding.ItemMemoBinding
-import lex.neuron.memorieshub.databinding.TestItemBinding
-import lex.neuron.memorieshub.ui.title.memo.MemoAdapter
-import lex.neuron.memorieshub.ui.title.title.TitleAdapter
+import lex.neuron.memorieshub.databinding.DirItemBinding
 
-class TestDirAdapter(
-    private val longListener: TestDirAdapter.OnLongItemClickListener,
-    private val clickListener: TestDirAdapter.OnClickListener
+class DirAdapter(
+    private val longListener: DirAdapter.OnLongItemClickListener,
+    private val clickListener: DirAdapter.OnClickListener
 ) :
-    ListAdapter<DirEntity, TestDirAdapter.ListMemoViewHolder>(DiffCallback()) {
+    ListAdapter<DirEntity, DirAdapter.ListMemoViewHolder>(DiffCallback()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListMemoViewHolder {
-        val binding = TestItemBinding.inflate(
+        val binding = DirItemBinding.inflate(
             LayoutInflater.from(parent.context),
             parent, false
         )
@@ -33,7 +28,7 @@ class TestDirAdapter(
         holder.bind(currentItem)
     }
 
-    inner class ListMemoViewHolder(private val binding: TestItemBinding) :
+    inner class ListMemoViewHolder(private val binding: DirItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.apply {

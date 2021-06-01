@@ -12,25 +12,25 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import lex.neuron.memorieshub.R
 import lex.neuron.memorieshub.data.entity.DirEntity
-import lex.neuron.memorieshub.databinding.DeleteMeBinding
+import lex.neuron.memorieshub.databinding.ListDirBinding
 
 @AndroidEntryPoint
 class DirBottom : BottomSheetDialogFragment(),
-TestDirAdapter.OnClickListener, TestDirAdapter.OnLongItemClickListener{
-    private val viewModel: BottomTestViewModel by viewModels()
+DirAdapter.OnClickListener, DirAdapter.OnLongItemClickListener{
+    private val viewModel: BottomViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.delete_me, container, false)
+        val view = inflater.inflate(R.layout.list_dir, container, false)
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapterMemo = TestDirAdapter(this, this)
-        val binding = DeleteMeBinding.bind(view)
+        val adapterMemo = DirAdapter(this, this)
+        val binding = ListDirBinding.bind(view)
 
         binding.apply {
             memoRv.apply {

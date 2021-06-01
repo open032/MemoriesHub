@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import lex.neuron.memorieshub.data.RoomDao
 
-class BottomTestViewModel @ViewModelInject constructor(
+class BottomViewModel @ViewModelInject constructor(
     val memoDao: RoomDao
 ) : ViewModel() {
 

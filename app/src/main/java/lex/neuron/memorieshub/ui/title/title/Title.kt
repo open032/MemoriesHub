@@ -1,33 +1,26 @@
 package lex.neuron.memorieshub.ui.title.title
 
-import android.app.Activity
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import lex.neuron.memorieshub.R
 import lex.neuron.memorieshub.data.entity.TitleEntity
-import lex.neuron.memorieshub.databinding.TitleAdapterBinding
+import lex.neuron.memorieshub.databinding.ListTitleBinding
 import lex.neuron.memorieshub.util.exhaustive
-import com.google.android.material.bottomappbar.BottomAppBar
 
 
 @AndroidEntryPoint
-class Title : Fragment(R.layout.title_adapter),
+class Title : Fragment(R.layout.list_title),
     TitleAdapter.OnLongItemClickListener, TitleAdapter.OnClickListener {
 
     private val viewModel: TitleViewModel by viewModels()
@@ -37,7 +30,7 @@ class Title : Fragment(R.layout.title_adapter),
 
         var activity: AppCompatActivity = getActivity() as AppCompatActivity
 
-        val binding = TitleAdapterBinding.bind(view)
+        val binding = ListTitleBinding.bind(view)
 
         activity.setSupportActionBar(binding.bottomAppBar)
 
