@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "888858327031",
+    "project_id": "memorieshub-66db7",
+    "storage_bucket": "memorieshub-66db7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888858327031:android:68fef7db4820e2d2b3e0f2",
+        "android_client_info": {
+          "package_name": "lex.neuron.memorieshub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888858327031-8pjo7pfqhkp2ukho2ndv9e40t6o23qij.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lex.neuron.memorieshub",
+            "certificate_hash": "85962635d3398dfcdf546d6ec0687d88485a805e"
+          }
+        },
+        {
+          "client_id": "888858327031-vrhifnolofoignpo71ru16h9p8qp9jv8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYRcl6bt7drXdew61tSXvOZJR_9JmW-g4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888858327031-vrhifnolofoignpo71ru16h9p8qp9jv8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

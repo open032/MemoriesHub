@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/my_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_in_auth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Authenticate Frag"
+            android:textColor="@color/my_btn_easy"
+            android:textSize="50dp" />
+
+        <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cpv_auth"
+            android:layout_width="@dimen/loaded_size"
+            android:layout_height="@dimen/loaded_size"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:visibility="visible"
+            app:cpv_animAutostart="true"
+            app:cpv_color="@color/purple_500"
+            app:cpv_indeterminate="true" />
+
+    </LinearLayout>
+</FrameLayout>
+
+
+
+
+
+
+

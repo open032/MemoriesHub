@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/authenticate">
+
+    <fragment
+        android:id="@+id/authenticate"
+        android:name="lex.neuron.memorieshub.ui.firebase.authenticate.authenticate.Authenticate"
+        android:label="Authenticate"
+        tools:layout="@layout/frag_authenticate_firebase">
+        <action
+            android:id="@+id/action_authenticate_to_listMainFrag"
+            app:destination="@id/listMainFrag" />
+        <action
+            android:id="@+id/action_authenticate_to_signIn"
+            app:destination="@id/signIn" />
+    </fragment>
+    <fragment
+        android:id="@+id/signIn"
+        android:name="lex.neuron.memorieshub.ui.firebase.authenticate.signin.SignIn"
+        android:label="SignIn">
+        <action
+            android:id="@+id/action_signIn_to_account"
+            app:destination="@id/account" />
+        <action
+            android:id="@+id/action_signIn_to_listMainFrag"
+            app:destination="@id/listMainFrag" />
+    </fragment>
+    <fragment
+        android:id="@+id/account"
+        android:name="lex.neuron.memorieshub.ui.firebase.authenticate.account.Account"
+        android:label="Account">
+        <action
+            android:id="@+id/action_account_to_signIn"
+            app:destination="@id/signIn" />
+    </fragment>
+    <fragment
+        android:id="@+id/listMainFrag"
+        android:name="lex.neuron.memorieshub.ui.title.title.Title"
+        android:label="ListMainFrag">
+        <action
+            android:id="@+id/action_listMainFrag_to_addEditTitleFrag"
+            app:destination="@id/addEditTitleFrag" />
+        <action
+            android:id="@+id/action_listMainFrag_to_memoFrag"
+            app:destination="@id/memoFrag" />
+        <action
+            android:id="@+id/action_listMainFrag_to_bottomTest"
+            app:destination="@id/bottomTest" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditTitleFrag"
+        android:name="lex.neuron.memorieshub.ui.title.addedtitle.AddEditTitle"
+        android:label="add_edit_title_frag">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/memoFrag"
+        android:name="lex.neuron.memorieshub.ui.title.memo.Memo"
+        android:label="MemoFrag">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_memoFrag_to_addEditMemo"
+            app:destination="@id/addEditMemo" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditMemo"
+        android:name="lex.neuron.memorieshub.ui.title.addedmemo.AddEditMemo"
+        android:label="AddEditMemo">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <argument
+            android:name="titleMemo"
+            app:argType="string" />
+        <argument
+            android:name="description"
+            app:argType="string" />
+        <argument
+            android:name="idmemo"
+            app:argType="integer" />
+    </fragment>
+    <dialog
+        android:id="@+id/bottomSheetDialog"
+        android:name="lex.neuron.memorieshub.ui.title.bottomdialog.BottomSheetDialog"
+        android:label="BottomSheetDialog" >
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </dialog>
+    <dialog
+        android:id="@+id/bottomTest"
+        android:name="lex.neuron.memorieshub.ui.title.bottomdialog.DirBottom"
+        android:label="BottomTest" />
+    <dialog
+        android:id="@+id/buttomShee"
+        android:name="lex.neuron.memorieshub.ui.title.bottomdialog.BottomShee"
+        android:label="ButtomShee" />
+    <!--<dialog
+        android:id="@+id/buttomShee"
+        android:name="lex.neuron.memorieshub.ui.title.bottomdialog.ButtomShee"
+        android:label="ButtomShee" />-->
+</navigation>
