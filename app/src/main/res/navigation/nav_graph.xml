@@ -91,7 +91,7 @@
     </fragment>
     <dialog
         android:id="@+id/bottomSheetDialog"
-        android:name="lex.neuron.memorieshub.ui.title.bottomdialog.BottomSheetDialog"
+        android:name="lex.neuron.memorieshub.ui.title.dir.BottomSheetDialog"
         android:label="BottomSheetDialog" >
         <argument
             android:name="id"
@@ -99,11 +99,11 @@
     </dialog>
     <dialog
         android:id="@+id/bottomTest"
-        android:name="lex.neuron.memorieshub.ui.title.bottomdialog.DirBottom"
+        android:name="lex.neuron.memorieshub.ui.title.dir.DirBottom"
         android:label="BottomTest" />
     <dialog
         android:id="@+id/buttomShee"
-        android:name="lex.neuron.memorieshub.ui.title.bottomdialog.BottomShee"
+        android:name="lex.neuron.memorieshub.ui.title.dir.BottomShee"
         android:label="ButtomShee" />
     <!--<dialog
         android:id="@+id/buttomShee"

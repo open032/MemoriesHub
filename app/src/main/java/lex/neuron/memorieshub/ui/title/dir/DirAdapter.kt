@@ -1,4 +1,4 @@
-package lex.neuron.memorieshub.ui.title.bottomdialog
+package lex.neuron.memorieshub.ui.title.dir
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

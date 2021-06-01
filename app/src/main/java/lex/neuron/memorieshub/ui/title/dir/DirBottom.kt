@@ -1,4 +1,4 @@
-package lex.neuron.memorieshub.ui.title.bottomdialog
+package lex.neuron.memorieshub.ui.title.dir
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
@@ -17,7 +17,7 @@ import lex.neuron.memorieshub.databinding.ListDirBinding
 @AndroidEntryPoint
 class DirBottom : BottomSheetDialogFragment(),
 DirAdapter.OnClickListener, DirAdapter.OnLongItemClickListener{
-    private val viewModel: BottomViewModel by viewModels()
+    private val viewModel: DirViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
