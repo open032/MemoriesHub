@@ -1,6 +1,10 @@
 package lex.neuron.memorieshub.ui.title.title
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -64,6 +68,10 @@ class Title : Fragment(R.layout.list_title),
             fabAddTask.setOnClickListener {
                 viewModel.onAddNewTitleClick()
             }
+
+            imageBack.setOnClickListener {
+                viewModel.arrowBack()
+            }
         }
 
         viewModel.title.observe(viewLifecycleOwner) {
@@ -75,7 +83,7 @@ class Title : Fragment(R.layout.list_title),
                     is TitleViewModel.TitleEvent.NavigateToAddScreen -> {
                         val action =
                             TitleDirections.actionListMainFragToAddEditTitleFrag(
-                                -1,
+                                event.id,
                                 ""
                             )
                         findNavController().navigate(action)
@@ -99,20 +107,32 @@ class Title : Fragment(R.layout.list_title),
                             TitleDirections.actionListMainFragToBottomTest()
                         findNavController().navigate(action);
                     }
+                    is TitleViewModel.TitleEvent.NavigateBack -> {
+                            findNavController().popBackStack()
+                    }
                 }.exhaustive
             }
         }
         setHasOptionsMenu(true)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_title_entity, menu)
+
+        val searchItem = menu.findItem(R.id.more_vert)
+    }
+
+    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> {
-                viewModel.onMenuClick()
+            R.id.more_vert -> {
+                viewModel.moreVert()
             }
+           *//* android.R.id.home -> {
+                viewModel.onMenuClick()
+            }*//*
         }
         return super.onOptionsItemSelected(item)
-    }
+    }*/
 
     override fun onItemClick(titleEntity: TitleEntity) {
         viewModel.onTitleSelected(titleEntity)

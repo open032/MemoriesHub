@@ -95,7 +95,7 @@ class SignIn : Fragment(R.layout.frag_sign_in) {
         mAuth.signInWithCredential(credential)
             .addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
-                    Navigation.findNavController(mView).navigate(R.id.action_signIn_to_listMainFrag)
+                    Navigation.findNavController(mView).navigate(R.id.action_addEditDir_to_bottomTest)
                     // Sign in success, update UI with the signed-in user's information
                     textView.text = "googleSignInClient in fragment"
                     Log.e(ContentValues.TAG, "signInWithCredential:success")

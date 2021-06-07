@@ -15,20 +15,28 @@ import kotlinx.coroutines.launch
 import lex.neuron.memorieshub.data.RoomDao
 import lex.neuron.memorieshub.data.entity.DirEntity
 import lex.neuron.memorieshub.data.entity.TitleEntity
+import lex.neuron.memorieshub.ui.title.memo.MemoViewModel
 
 class TitleViewModel @ViewModelInject constructor(
     private val dao: RoomDao,
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
-
     private val eventChannel = Channel<TitleEvent>()
 
-    val title = dao.getTitle().asLiveData()
+
+    private val id = state.get<Int>("id")
+    private var dirId = state.get<Int>("dirId") ?: id ?: 1
+        set(value) {
+            field = value
+            state.set("dirId", value)
+        }
+    val convertDirId = dirId.toString().toInt()
+    val title = dao.getDirByTe(convertDirId).asLiveData()
 
     val titleEvent = eventChannel.receiveAsFlow()
 
     fun onSwiped(title: TitleEntity) = viewModelScope.launch {
-        dao.delete(title)
+        dao.deleteTe(title)
     }
 
     fun onMenuClick() = viewModelScope.launch {
@@ -36,7 +44,7 @@ class TitleViewModel @ViewModelInject constructor(
     }
 
     fun onAddNewTitleClick() = viewModelScope.launch {
-        eventChannel.send(TitleEvent.NavigateToAddScreen)
+        eventChannel.send(TitleEvent.NavigateToAddScreen(dirId))
     }
 
     fun onLongTitleSelected(titleEntity: TitleEntity) = viewModelScope.launch {
@@ -46,11 +54,18 @@ class TitleViewModel @ViewModelInject constructor(
 
     fun onTitleSelected(titleEntity: TitleEntity) = viewModelScope.launch {
         eventChannel.send(TitleEvent.NavigateToAnotherList(titleEntity.id, titleEntity.name))
+        Log.e(TAG, "onTitleSelected: ${titleEntity.id}", )
     }
 
+    fun arrowBack() = viewModelScope.launch {
+        eventChannel.send(TitleEvent.NavigateBack)
+    }
+
+
     sealed class TitleEvent {
-        object NavigateToAddScreen : TitleEvent()
+        object NavigateBack : TitleEvent()
         object NavigateToBottomSheet : TitleEvent()
+        data class NavigateToAddScreen(val id: Int) : TitleEvent()
         data class NavigateToEditTitleScreen(val id: Int, val name: String) : TitleEvent()
         data class NavigateToAnotherList(val id: Int, val name: String) : TitleEvent()
     }

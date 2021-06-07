@@ -30,7 +30,7 @@ class Authenticate : Fragment(R.layout.frag_authenticate_firebase) {
         mCvpWait.visibility = View.VISIBLE
 
         if (user != null) {
-            Navigation.findNavController(view).navigate(R.id.action_authenticate_to_listMainFrag)
+            Navigation.findNavController(view).navigate(R.id.action_authenticate_to_bottomTest)
 //            mCvpWait.visibility = View.GONE
 //            textView.text = "user != null"
             Log.e(TAG, "user =! null",)

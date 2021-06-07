@@ -13,7 +13,7 @@ class DirAdapter(
     private val clickListener: DirAdapter.OnClickListener
 ) :
     ListAdapter<DirEntity, DirAdapter.ListMemoViewHolder>(DiffCallback()) {
-
+//    androidx.recyclerview.widget.
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListMemoViewHolder {
         val binding = DirItemBinding.inflate(
@@ -32,7 +32,7 @@ class DirAdapter(
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.apply {
-                root.setOnClickListener{
+                root.setOnClickListener {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val dir = getItem(position)
@@ -64,6 +64,7 @@ class DirAdapter(
     interface OnLongItemClickListener {
         fun onLongItemClick(dirEntity: DirEntity)
     }
+
     class DiffCallback : DiffUtil.ItemCallback<DirEntity>() {
         override fun areItemsTheSame(oldItem: DirEntity, newItem: DirEntity) =
             oldItem.id == newItem.id

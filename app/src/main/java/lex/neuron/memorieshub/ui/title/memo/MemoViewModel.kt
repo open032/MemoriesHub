@@ -30,11 +30,15 @@ class MemoViewModel @ViewModelInject constructor(
     val convertTcId: Int = tcId.toString().toInt()
 
 
-    val memo = memoDao.getTlMemo(convertTcId).asLiveData()
+    val memo = memoDao.getTeMemo(convertTcId).asLiveData()
     val memoEvent = eventChannel.receiveAsFlow()
 
     fun onSwipe(memo: MemoEntity) = viewModelScope.launch {
         memoDao.deleteMemo(memo)
+    }
+
+    fun arrowBack() = viewModelScope.launch {
+        eventChannel.send(MemoEvent.NavigateBack)
     }
 
     fun addNewMemo() = viewModelScope.launch {
@@ -52,6 +56,7 @@ class MemoViewModel @ViewModelInject constructor(
     }
 
     sealed class MemoEvent {
+        object NavigateBack : MemoEvent()
         data class NavigateToAddScreen(val id: Int) : MemoEvent()
         data class NavigateToEditScreen(
             val id: Int,

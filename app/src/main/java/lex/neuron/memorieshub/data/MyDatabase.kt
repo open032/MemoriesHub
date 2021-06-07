@@ -28,24 +28,25 @@ abstract class MyDatabase : RoomDatabase() {
             super.onCreate(db)
 
             val dao = database.get().titleCardDao()
-//            val daoTwo = database.get().titleCardDaoTwo()
 
             applicationScope.launch {
-                dao.insert(TitleEntity("Nika loves coconut"))
-                dao.insert(TitleEntity("Churchill loves Core"))
-                dao.insert(TitleEntity("Sasha loves Coffee"))
-                dao.insert(TitleEntity("1"))
-                dao.insert(TitleEntity("2"))
-                dao.insert(TitleEntity("3"))
-                dao.insert(TitleEntity("4"))
+                dao.insertDir(DirEntity("Main"))
+                dao.insertDir(DirEntity("Geology"))
+                dao.insertDir(DirEntity("Chemistry"))
+                dao.insertDir(DirEntity("Something"))
 
-                dao.insertMemo(MemoEntity(1, "Database", "desc" ))
-                dao.insertMemo(MemoEntity(1, "Who", "I am" ))
-                dao.insertMemo(MemoEntity(2, "No", "Yes" ))
+                dao.insertTe(TitleEntity(1, "Interesting"))
+                dao.insertTe(TitleEntity(1, "Good"))
+                dao.insertTe(TitleEntity(3, "Alkane"))
+                dao.insertTe(TitleEntity(2, "Geology Time"))
+                dao.insertTe(TitleEntity(4, "Coffee"))
 
-                dao.insertDir(DirEntity("Dir One"))
-                dao.insertDir(DirEntity("Dir Two"))
-                dao.insertDir(DirEntity("Dir Three"))
+                dao.insertMemo(MemoEntity(1, "Hock", "room" ))
+                dao.insertMemo(MemoEntity(2, "Temp", "To day" ))
+                dao.insertMemo(MemoEntity(3, "Methane", "CH4" ))
+                dao.insertMemo(MemoEntity(3, "Ethane", "C2H6" ))
+                dao.insertMemo(MemoEntity(4, "Mesozoic", "Start 240 Millions of years ago" ))
+                dao.insertMemo(MemoEntity(5, "Hard", "Drink" ))
             }
         }
     }

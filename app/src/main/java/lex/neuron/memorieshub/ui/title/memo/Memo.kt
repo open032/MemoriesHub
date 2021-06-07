@@ -56,6 +56,10 @@ class Memo : Fragment(R.layout.list_memo),
             fabAddMemo.setOnClickListener {
                 viewModel.addNewMemo()
             }
+
+            imageBack.setOnClickListener {
+                viewModel.arrowBack()
+            }
         }
 
         viewModel.memo.observe(viewLifecycleOwner) {
@@ -75,6 +79,9 @@ class Memo : Fragment(R.layout.list_memo),
                                 event.id, event.titleMemo, event.description, event.idMemo
                             )
                         findNavController().navigate(action)
+                    }
+                    is MemoViewModel.MemoEvent.NavigateBack -> {
+                        findNavController().popBackStack()
                     }
                 }.exhaustive
             }

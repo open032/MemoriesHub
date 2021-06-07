@@ -11,11 +11,11 @@
         android:label="Authenticate"
         tools:layout="@layout/frag_authenticate_firebase">
         <action
-            android:id="@+id/action_authenticate_to_listMainFrag"
-            app:destination="@id/listMainFrag" />
-        <action
             android:id="@+id/action_authenticate_to_signIn"
             app:destination="@id/signIn" />
+        <action
+            android:id="@+id/action_authenticate_to_bottomTest"
+            app:destination="@id/bottomTest" />
     </fragment>
     <fragment
         android:id="@+id/signIn"
@@ -25,8 +25,8 @@
             android:id="@+id/action_signIn_to_account"
             app:destination="@id/account" />
         <action
-            android:id="@+id/action_signIn_to_listMainFrag"
-            app:destination="@id/listMainFrag" />
+            android:id="@+id/action_signIn_to_bottomTest"
+            app:destination="@id/bottomTest" />
     </fragment>
     <fragment
         android:id="@+id/account"
@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_listMainFrag_to_bottomTest"
             app:destination="@id/bottomTest" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/addEditTitleFrag"
@@ -89,24 +92,29 @@
             android:name="idmemo"
             app:argType="integer" />
     </fragment>
-    <dialog
-        android:id="@+id/bottomSheetDialog"
-        android:name="lex.neuron.memorieshub.ui.title.dir.BottomSheetDialog"
-        android:label="BottomSheetDialog" >
+    <fragment
+        android:id="@+id/bottomTest"
+        android:name="lex.neuron.memorieshub.ui.title.dir.Dir"
+        android:label="BottomTest" >
+        <action
+            android:id="@+id/action_bottomTest_to_listMainFrag2"
+            app:destination="@id/listMainFrag" />
+        <action
+            android:id="@+id/action_bottomTest_to_addEditDir"
+            app:destination="@id/addEditDir" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditDir"
+        android:name="lex.neuron.memorieshub.ui.title.addeddir.AddEditDir"
+        android:label="AddEditDir" >
+        <action
+            android:id="@+id/action_addEditDir_to_bottomTest"
+            app:destination="@id/bottomTest" />
         <argument
             android:name="id"
             app:argType="integer" />
-    </dialog>
-    <dialog
-        android:id="@+id/bottomTest"
-        android:name="lex.neuron.memorieshub.ui.title.dir.DirBottom"
-        android:label="BottomTest" />
-    <dialog
-        android:id="@+id/buttomShee"
-        android:name="lex.neuron.memorieshub.ui.title.dir.BottomShee"
-        android:label="ButtomShee" />
-    <!--<dialog
-        android:id="@+id/buttomShee"
-        android:name="lex.neuron.memorieshub.ui.title.bottomdialog.ButtomShee"
-        android:label="ButtomShee" />-->
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
 </navigation>

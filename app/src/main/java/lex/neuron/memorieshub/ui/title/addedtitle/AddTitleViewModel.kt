@@ -14,14 +14,14 @@ import lex.neuron.memorieshub.data.RoomDao
 import lex.neuron.memorieshub.data.entity.TitleEntity
 
 class AddTitleViewModel @ViewModelInject constructor(
-    private val roomDao: RoomDao,
+    private val dao: RoomDao,
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
 
-    private val id = state.get<Int>("id")
+    private val mId = state.get<Int>("id")
     private val name = state.get<String>("name")
 
-    var titleID = state.get<Int>("titleID") ?: id ?: "void id"
+    var titleID = state.get<Int>("titleID") ?: mId ?: "void id"
         set(value) {
             field = value
             state.set("titleID", value)
@@ -31,12 +31,13 @@ class AddTitleViewModel @ViewModelInject constructor(
             field = value
             state.set("titleName", value)
         }
+    val id = titleID.toString().toInt()
 
     fun onSaveClick(name: String) {
-        if (id != -1) {
-            changeTitle(titleID as Int, name)
-        } else {
+        if(titleName.isEmpty()) {
             createTitle(name)
+        } else {
+            changeTitle(id, name)
         }
     }
 
@@ -45,20 +46,21 @@ class AddTitleViewModel @ViewModelInject constructor(
 
     private fun changeTitle(titleID: Int, etName: String) = viewModelScope.launch {
 
-        val titleEntity: TitleEntity = roomDao.getById(titleID)
+        val titleEntity: TitleEntity = dao.getTeById(titleID)
         val updateTitleEntity: TitleEntity = titleEntity.copy(name = etName)
 
         updateTitle(updateTitleEntity)
     }
 
     private fun createTitle(etName: String) = viewModelScope.launch {
-        val newTitle = TitleEntity(name = etName)
-        roomDao.insert(newTitle)
+        val newTitle = TitleEntity(dirList = id, name = etName)
+        dao.insertTe(newTitle)
         addEditTitleEventChannel.send(AddEditTitleEvent.NavigateBack)
+        Log.e(TAG, "createTitle: $id", )
     }
 
     private fun updateTitle(updateTitleEntity: TitleEntity) = viewModelScope.launch {
-        roomDao.update(updateTitleEntity)
+        dao.updateTe(updateTitleEntity)
         addEditTitleEventChannel.send(AddEditTitleEvent.NavigateBack)
     }
 

@@ -59,7 +59,7 @@ class AddEditMemoViewModel @ViewModelInject constructor(
     }
 
     private fun changeMemo(fabTitle: String, fabDesc: String) = viewModelScope.launch {
-        val memoEntity: MemoEntity = roomDao.getByMemoId(id)
+        val memoEntity: MemoEntity = roomDao.getMemoById(id)
         val updateMemoEntity: MemoEntity = memoEntity.copy(titleList = idTl, title = fabTitle,
             description = fabDesc, id = id)
         updateMemo(updateMemoEntity)
