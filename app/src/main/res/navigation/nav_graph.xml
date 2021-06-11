@@ -14,8 +14,8 @@
             android:id="@+id/action_authenticate_to_signIn"
             app:destination="@id/signIn" />
         <action
-            android:id="@+id/action_authenticate_to_bottomTest"
-            app:destination="@id/bottomTest" />
+            android:id="@+id/action_authenticate_to_dir"
+            app:destination="@id/dir_list" />
     </fragment>
     <fragment
         android:id="@+id/signIn"
@@ -25,8 +25,11 @@
             android:id="@+id/action_signIn_to_account"
             app:destination="@id/account" />
         <action
-            android:id="@+id/action_signIn_to_bottomTest"
-            app:destination="@id/bottomTest" />
+            android:id="@+id/action_signIn_to_dir_list"
+            app:destination="@id/dir_list" />
+        <action
+            android:id="@+id/action_signIn_to_listMainFrag"
+            app:destination="@id/listMainFrag" />
     </fragment>
     <fragment
         android:id="@+id/account"
@@ -48,7 +51,7 @@
             app:destination="@id/memoFrag" />
         <action
             android:id="@+id/action_listMainFrag_to_bottomTest"
-            app:destination="@id/bottomTest" />
+            app:destination="@id/dir_list" />
         <argument
             android:name="id"
             app:argType="integer" />
@@ -93,7 +96,7 @@
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/bottomTest"
+        android:id="@+id/dir_list"
         android:name="lex.neuron.memorieshub.ui.title.dir.Dir"
         android:label="BottomTest" >
         <action
@@ -109,7 +112,7 @@
         android:label="AddEditDir" >
         <action
             android:id="@+id/action_addEditDir_to_bottomTest"
-            app:destination="@id/bottomTest" />
+            app:destination="@id/dir_list" />
         <argument
             android:name="id"
             app:argType="integer" />

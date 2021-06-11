@@ -108,7 +108,9 @@ class Title : Fragment(R.layout.list_title),
                         findNavController().navigate(action);
                     }
                     is TitleViewModel.TitleEvent.NavigateBack -> {
-                            findNavController().popBackStack()
+                        val action =
+                            TitleDirections.actionListMainFragToBottomTest()
+                            findNavController().navigate(action)
                     }
                 }.exhaustive
             }

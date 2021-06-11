@@ -26,7 +26,7 @@ import java.util.*
 class Dir : Fragment(R.layout.list_dir),
     DirAdapter.OnClickListener, DirAdapter.OnLongItemClickListener {
     private val viewModel: DirViewModel by viewModels()
-    var touchHelper : ItemTouchHelper? = null
+    var touchHelper: ItemTouchHelper? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +43,7 @@ class Dir : Fragment(R.layout.list_dir),
         val binding = ListDirBinding.bind(view)
 
         binding.apply {
+
             dirRv.apply {
 
                 adapter = adapterDir
@@ -92,7 +93,6 @@ class Dir : Fragment(R.layout.list_dir),
                 }.exhaustive
             }
         }
-
         viewModel.dir.observe(viewLifecycleOwner) {
             adapterDir.submitList(it)
             binding.dirRv.adapter = adapterDir

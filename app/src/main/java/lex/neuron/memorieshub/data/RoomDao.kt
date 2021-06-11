@@ -30,6 +30,8 @@ interface RoomDao {
 
 
 
+
+
     @Delete
     suspend fun deleteMemo(memoEntity: MemoEntity)
 

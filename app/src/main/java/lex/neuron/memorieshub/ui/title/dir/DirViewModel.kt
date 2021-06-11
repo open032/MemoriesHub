@@ -11,15 +11,25 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import lex.neuron.memorieshub.data.MyDatabase
 import lex.neuron.memorieshub.data.RoomDao
 import lex.neuron.memorieshub.data.entity.DirEntity
 import lex.neuron.memorieshub.data.entity.TitleEntity
+import lex.neuron.memorieshub.di.AppModule
 
 class DirViewModel @ViewModelInject constructor(
     private val dao: RoomDao,
+    @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
-
     private val eventChannel = Channel<DirEvent>()
+
+    private val id = state.get<Int>("id")
+    var dirId = state.get<Int>("dirId") ?: id ?: 1
+            set(value) {
+                field = value
+                state.set("dirId", value)
+            }
+
 
     val dir = dao.getDir().asLiveData()
     val dirEvent = eventChannel.receiveAsFlow()

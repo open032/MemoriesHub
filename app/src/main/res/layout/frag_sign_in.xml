@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/my_background">
 
     <LinearLayout
@@ -30,6 +31,16 @@
             android:text="@string/sign_in"
             android:background="@color/my_btn_middle"
             android:layout_gravity="center"/>
+
+        <com.github.rahatarmanahmed.cpv.CircularProgressView
+            android:id="@+id/circular_pv"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/loaded_size"
+            android:layout_height="@dimen/loaded_size"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:cpv_animAutostart="true"
+            app:cpv_indeterminate="true"/>
 
     </LinearLayout>
 

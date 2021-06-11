@@ -15,8 +15,9 @@ import javax.inject.Provider
 @Database(entities = [TitleEntity::class, MemoEntity::class, DirEntity::class], version = 1)
 abstract class MyDatabase : RoomDatabase() {
 
+
+    var INSTANCE: MyDatabase? = null
     abstract fun titleCardDao(): RoomDao
-//    abstract fun titleCardDaoTwo(): MemoDao
 
 
     class Callback @Inject constructor(
