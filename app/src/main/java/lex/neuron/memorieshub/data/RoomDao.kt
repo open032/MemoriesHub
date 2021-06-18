@@ -8,16 +8,20 @@ import lex.neuron.memorieshub.data.entity.TitleEntity
 
 @Dao
 interface RoomDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMemo(memoEntity: MemoEntity)
+
+    // ********** Insert **********
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTe(titleEntity: TitleEntity)
+    suspend fun insertMemo(memoEntity: MemoEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDir(dirEntity: DirEntity)
+    suspend fun insertTe(titleEntity: TitleEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDir(dirEntity: DirEntity): Long
 
 
+    // ********** Update **********
 
     @Update
     suspend fun updateMemo(memoEntity: MemoEntity)
@@ -29,7 +33,7 @@ interface RoomDao {
     suspend fun updateDir(dirEntity: DirEntity)
 
 
-
+    // ********** Delete **********
 
 
     @Delete
@@ -41,34 +45,39 @@ interface RoomDao {
     @Delete
     suspend fun deleteDir(dirEntity: DirEntity)
 
-    @Query("DELETE FROM dir_table WHERE id = :id")
-    suspend fun deleteDirById(id: Int)
+
+    // ********** Query **********
 
 
-
+    // Memo
     @Query("SELECT * FROM memo_table")
     fun getMemo(): Flow<List<MemoEntity>>
 
     @Query("SELECT * FROM memo_table WHERE id = :id")
     suspend fun getMemoById(id: Int): MemoEntity
 
-    @Query("SELECT * FROM memo_table WHERE titleList = :tc")
-    fun getTeMemo(tc: Int): Flow<List<MemoEntity>>
+    @Query("SELECT * FROM memo_table WHERE titleList = :tl")
+    fun getTeMemo(tl: Int): Flow<List<MemoEntity>>
 
 
+    // TitleEntity
     @Query("SELECT * FROM title_table")
     fun getTe(): Flow<List<TitleEntity>>
 
     @Query("SELECT * FROM title_table WHERE id = :id")
     suspend fun getTeById(id: Int): TitleEntity
 
-    @Query("SELECT * FROM title_table WHERE dirList = :tc")
-    fun getDirByTe(tc: Int): Flow<List<TitleEntity>>
+    @Query("SELECT * FROM title_table WHERE dirList = :dl")
+    fun getDirByTe(dl: Int): Flow<List<TitleEntity>>
 
 
+    // Dir
     @Query("SELECT * FROM dir_table")
     fun getDir(): Flow<List<DirEntity>>
 
     @Query("SELECT * FROM dir_table WHERE id = :id")
     suspend fun getDirById(id: Int): DirEntity
+
+    @Query("SELECT * FROM title_table WHERE dirList = :dir")
+    fun getDirTitle(dir: Int): Flow<List<TitleEntity>>
 }

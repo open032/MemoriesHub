@@ -1,24 +1,41 @@
 {
   "project_info": {
     "project_number": "888858327031",
+    "firebase_url": "https://memorieshub-66db7-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "memorieshub-66db7",
     "storage_bucket": "memorieshub-66db7.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:888858327031:android:68fef7db4820e2d2b3e0f2",
+        "mobilesdk_app_id": "1:888858327031:android:da2cd40736546b86b3e0f2",
         "android_client_info": {
           "package_name": "lex.neuron.memorieshub"
         }
       },
       "oauth_client": [
         {
-          "client_id": "888858327031-8pjo7pfqhkp2ukho2ndv9e40t6o23qij.apps.googleusercontent.com",
+          "client_id": "888858327031-ad6ou5ag2lmhd64mtq08c3jmdqn34vb9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "lex.neuron.memorieshub",
-            "certificate_hash": "85962635d3398dfcdf546d6ec0687d88485a805e"
+            "certificate_hash": "e0157041586b7ae523ce3f875538e5d154d1d70c"
+          }
+        },
+        {
+          "client_id": "888858327031-kr2tm8nulsj0p7au0hd8195v1qpcbbg5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lex.neuron.memorieshub",
+            "certificate_hash": "c0a073a8c9c9696ad0dda33cc4467d2df5aba627"
+          }
+        },
+        {
+          "client_id": "888858327031-ptaogqt99o7nfuoppeim7mbgdg0tv7fk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lex.neuron.memorieshub",
+            "certificate_hash": "cce303d72c4d5692e290d5166ff6d3e45d9441c5"
           }
         },
         {

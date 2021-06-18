@@ -24,7 +24,7 @@ class SignInViewModel @ViewModelInject constructor(
 
     lateinit var googleSignInClient: GoogleSignInClient
 
-    val auth: FirebaseAuth = FirebaseAuth.getInstance()
+//    val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     val signInEvent = eventChannel.receiveAsFlow()
 

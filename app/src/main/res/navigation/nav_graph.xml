@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/listMainFrag"
-        android:name="lex.neuron.memorieshub.ui.title.title.Title"
+        android:name="lex.neuron.memorieshub.ui.titles.title.Title"
         android:label="ListMainFrag">
         <action
             android:id="@+id/action_listMainFrag_to_addEditTitleFrag"
@@ -58,7 +58,7 @@
     </fragment>
     <fragment
         android:id="@+id/addEditTitleFrag"
-        android:name="lex.neuron.memorieshub.ui.title.addedtitle.AddEditTitle"
+        android:name="lex.neuron.memorieshub.ui.titles.addedtitle.AddEditTitle"
         android:label="add_edit_title_frag">
         <argument
             android:name="id"
@@ -69,7 +69,7 @@
     </fragment>
     <fragment
         android:id="@+id/memoFrag"
-        android:name="lex.neuron.memorieshub.ui.title.memo.Memo"
+        android:name="lex.neuron.memorieshub.ui.titles.memo.Memo"
         android:label="MemoFrag">
         <argument
             android:name="id"
@@ -80,7 +80,7 @@
     </fragment>
     <fragment
         android:id="@+id/addEditMemo"
-        android:name="lex.neuron.memorieshub.ui.title.addedmemo.AddEditMemo"
+        android:name="lex.neuron.memorieshub.ui.titles.addedmemo.AddEditMemo"
         android:label="AddEditMemo">
         <argument
             android:name="id"
@@ -97,7 +97,7 @@
     </fragment>
     <fragment
         android:id="@+id/dir_list"
-        android:name="lex.neuron.memorieshub.ui.title.dir.Dir"
+        android:name="lex.neuron.memorieshub.ui.titles.dir.Dir"
         android:label="BottomTest" >
         <action
             android:id="@+id/action_bottomTest_to_listMainFrag2"
@@ -108,7 +108,7 @@
     </fragment>
     <fragment
         android:id="@+id/addEditDir"
-        android:name="lex.neuron.memorieshub.ui.title.addeddir.AddEditDir"
+        android:name="lex.neuron.memorieshub.ui.titles.addeddir.AddEditDir"
         android:label="AddEditDir" >
         <action
             android:id="@+id/action_addEditDir_to_bottomTest"

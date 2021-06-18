@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import lex.neuron.memorieshub.R
 import lex.neuron.memorieshub.databinding.FragSignInBinding
+import lex.neuron.memorieshub.util.AUTH
 
 
 @AndroidEntryPoint
@@ -82,13 +83,15 @@ class SignIn : Fragment(R.layout.frag_sign_in) {
 
 
         val credential = GoogleAuthProvider.getCredential(idToken, null)
-        viewModel.auth.signInWithCredential(credential)
+//        viewModel.auth.signInWithCredential(credential)
+        AUTH.signInWithCredential(credential)
             .addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
                     Navigation.findNavController(mView).navigate(R.id.action_signIn_to_listMainFrag)
                     // Sign in success, update UI with the signed-in user's information
                     Log.e(ContentValues.TAG, "signInWithCredential:success")
-                    val user = viewModel.auth.currentUser
+//                    val user = viewModel.auth.currentUser
+                    val user = AUTH.currentUser
 //                    updateUI(user)
                 } else {
                     Log.e(ContentValues.TAG, "signInWithCredential:failure", task.exception)
