@@ -14,10 +14,16 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import lex.neuron.memorieshub.data.RoomDao
+import lex.neuron.memorieshub.data.entity.DeleteEntity
 import lex.neuron.memorieshub.data.entity.DirEntity
+import lex.neuron.memorieshub.data.entity.MemoEntity
 import lex.neuron.memorieshub.data.entity.TitleEntity
+import lex.neuron.memorieshub.ui.firebase.crud.dir.DirCreate
 import lex.neuron.memorieshub.ui.firebase.crud.dir.DirDelete
 import lex.neuron.memorieshub.ui.firebase.crud.dir.MemoForDelete
+import lex.neuron.memorieshub.ui.firebase.crud.dir.OnlyDirDelete
+import lex.neuron.memorieshub.ui.firebase.crud.memotwocolumns.MemoTwoColumnsDelete
+import lex.neuron.memorieshub.ui.firebase.crud.title.OnlyTitleDelete
 
 class DirViewModel @ViewModelInject constructor(
     private val dao: RoomDao,
@@ -38,6 +44,13 @@ class DirViewModel @ViewModelInject constructor(
     val dir = dao.getDir().asLiveData()
     val dirEvent = eventChannel.receiveAsFlow()
 
+    /* fun showDir() = viewModelScope.launch {
+         dao.getDir().collect { value ->
+             Log.e(TAG, "showDir: $value")
+         }
+     }*/
+
+    // List to remove nested elements
     fun titleList(dir: DirEntity) = viewModelScope.launch {
         dao.getDirByTe(dir.id).collect { value ->
             val size = value.size - 1
@@ -45,39 +58,95 @@ class DirViewModel @ViewModelInject constructor(
                 memoList(value[i].id)
                 Log.e(TAG, "titleList: ${value[i].dirList}")
                 listTitle.add(value[i].id)
+                val dirEntity = DeleteEntity("title", value[i].id, value[i].dirList)
+                dao.insertDelete(dirEntity)
             }
         }
     }
 
     private fun memoList(id: Int) = viewModelScope.launch {
-        Log.e(TAG, "memoList: $id", )
+        Log.e(TAG, "memoList: $id")
         dao.getTeMemo(id).collect { value ->
             val size = value.size - 1
             for (i in 0..size) {
                 listMemo.add(MemoForDelete(id, value[i].id))
+                val deleteEntity = DeleteEntity("memo", value[i].id, value[i].titleList)
+                dao.insertDelete(deleteEntity)
             }
         }
     }
 
-    fun onSwiped(dirEntity: DirEntity) = viewModelScope.launch {
+    fun onSwiped(dir: DirEntity, sendLaterNet: Boolean) = viewModelScope.launch {
+        Log.d(TAG, "onSwipedDir: $dir")
+        Log.d(TAG, "onSwipedDir: $sendLaterNet")
         delay(150)
-        dao.deleteDir(dirEntity)
-        val crud = DirDelete()
-        crud.deleteDir(dirEntity, listTitle, listMemo)
+        dao.deleteDir(dir)
+
+        if (!sendLaterNet) {
+            pendingDeletionDir()
+            delay(200)
+            pendingDeletionTitle()
+            delay(200)
+            pendingDeletionMemo()
+            delay(200)
+            val crud = DirDelete()
+            crud.deleteDir(dir, listTitle, listMemo)
+        }
+        if (sendLaterNet) {
+            delay(200)
+            val deleteEntity = DeleteEntity("dir", dir.id)
+            dao.insertDelete(deleteEntity)
+        }
+    }
+
+    private fun pendingDeletionMemo() = viewModelScope.launch {
+        dao.getDeleteByName("memo").collect { value ->
+            val size = value.size - 1
+            for (i in 0..size) {
+                Log.d(lex.neuron.memorieshub.permission.internet.TAG, "pendingDeletion: $value")
+                val crud = MemoTwoColumnsDelete()
+                val memo = MemoEntity(
+                    value[i].secondId, "", false,
+                    false, "", 0, value[i].id
+                )
+                crud.deleteMemoTwoColumns(memo)
+
+            }
+        }
+    }
+
+    private fun pendingDeletionTitle() = viewModelScope.launch {
+        dao.getDeleteByName("title").collect { value ->
+            val size = value.size - 1
+            for (i in 0..size) {
+                Log.d(TAG, "pendingDeletionTitle: $value")
+                val crud = OnlyTitleDelete()
+                val title = TitleEntity(
+                    dirList = value[i].secondId, "", false,
+                    false, 0, value[i].id
+                )
+                crud.deleteTitle(title)
+            }
+        }
+    }
+
+    private fun pendingDeletionDir() = viewModelScope.launch {
+        dao.getDeleteByName("dir").collect { value ->
+            val size = value.size - 1
+            for (i in 0..size) {
+                Log.d(TAG, "pendingDeletionDir: $value")
+                val crud = OnlyDirDelete()
+                val dir = DirEntity(
+                    name = "", false, false, 0, value[i].id
+                )
+                crud.deleteDir(dir)
+            }
+        }
     }
 
     fun onClick(dirEntity: DirEntity) = viewModelScope.launch {
         eventChannel.send(DirEvent.NavigateToTitleList(dirEntity.id))
 
-        /*dao.getDirTitle(dirEntity.id).collect { value ->
-            val size = value.size
-            for (i in 0..size - 1) {
-                Log.e(TAG, "Item Title: ${value[i].id}")
-            }
-//            Log.e(TAG, "onClickAddDir: $value")
-//            Log.e(TAG, "onClickAddDir: ${value.get(value.size - 1)}")
-
-        }*/
     }
 
     fun onLongClick(dirEntity: DirEntity) = viewModelScope.launch {
@@ -85,9 +154,25 @@ class DirViewModel @ViewModelInject constructor(
     }
 
     fun addNewItem() = viewModelScope.launch {
+        Log.d(TAG, "addNewItem: ")
+//        checkForCompliance()
         eventChannel.send(DirEvent.NavigateToAddDir)
     }
 
+    /*private fun checkForCompliance() = viewModelScope.launch {
+        dao.getDirByBool(bol = false).collect { value ->
+            val size = value.size - 1
+            for (i in 0..size) {
+                Log.e(lex.neuron.memorieshub.permission.internet.TAG, "checkForCompliance: $value")
+                Log.d(lex.neuron.memorieshub.permission.internet.TAG, "AddEditDirViewModel checkForCompliance: $value")
+                val crud = DirCreate()
+                crud.createDir(value[i], value[i].id.toLong())
+                val dir = DirEntity(name = value[i].name, hasNet = true,
+                    created = value[i].created, id = value[i].id )
+                dao.updateDir(dir)
+            }
+        }
+    }*/
 
 
     sealed class DirEvent {

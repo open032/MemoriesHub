@@ -1,5 +1,8 @@
 package lex.neuron.memorieshub.ui.titles.addedmemo
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -25,9 +28,10 @@ class AddEditMemo : Fragment(R.layout.add_edit_memo) {
             etTitleMemo.setText(viewModel.title)
             etDescriptionMemo.setText(viewModel.desc)
 
-            fabSaveMemo.setOnClickListener{
+            fabSaveMemo.setOnClickListener {
+                val sendLaterNet = sendLaterNet()
                 val titleFab = etTitleMemo.text.toString()
-                viewModel.onSaveClick(titleFab, etDescriptionMemo.text.toString())
+                viewModel.onSaveClick(titleFab, etDescriptionMemo.text.toString(), sendLaterNet)
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -41,5 +45,23 @@ class AddEditMemo : Fragment(R.layout.add_edit_memo) {
                 }.exhaustive
             }
         }
+    }
+
+    private fun sendLaterNet(): Boolean {
+        var info: NetworkInfo? = null
+        var connectivity =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivity != null) {
+            info = connectivity!!.activeNetworkInfo
+
+            if (info != null) {
+                if (info!!.state == NetworkInfo.State.CONNECTED) {
+                    return false
+                }
+            } else {
+                return true
+            }
+        }
+        return true
     }
 }

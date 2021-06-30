@@ -9,26 +9,25 @@ import lex.neuron.memorieshub.data.entity.DirEntity
 import lex.neuron.memorieshub.databinding.DirItemBinding
 
 class DirAdapter(
-    private val longListener: DirAdapter.OnLongItemClickListener,
-    private val clickListener: DirAdapter.OnClickListener
+    private val longListener: OnLongItemClickListener,
+    private val clickListener: OnClickListener
 ) :
-    ListAdapter<DirEntity, DirAdapter.ListMemoViewHolder>(DiffCallback()) {
-//    androidx.recyclerview.widget.
+    ListAdapter<DirEntity, DirAdapter.ListDirViewHolder>(DiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListMemoViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListDirViewHolder {
         val binding = DirItemBinding.inflate(
             LayoutInflater.from(parent.context),
             parent, false
         )
-        return ListMemoViewHolder(binding)
+        return ListDirViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ListMemoViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ListDirViewHolder, position: Int) {
         val currentItem = getItem(position)
         holder.bind(currentItem)
     }
 
-    inner class ListMemoViewHolder(private val binding: DirItemBinding) :
+    inner class ListDirViewHolder(private val binding: DirItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.apply {

@@ -1,15 +1,19 @@
 package lex.neuron.memorieshub.ui.titles.addedtitle
 
+import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import lex.neuron.memorieshub.data.RoomDao
 import lex.neuron.memorieshub.data.entity.TitleEntity
+import lex.neuron.memorieshub.permission.internet.TAG
 import lex.neuron.memorieshub.ui.firebase.crud.title.TitleCreate
 import lex.neuron.memorieshub.ui.firebase.crud.title.TitleUpdate
 
@@ -33,31 +37,67 @@ class AddTitleViewModel @ViewModelInject constructor(
         }
     val id = titleID.toString().toInt()
 
-    fun onSaveClick(name: String) {
-        if(titleName.isEmpty()) {
-            createTitle(name)
+    fun onSaveClick(name: String, sendLaterNet: Boolean) {
+        if (titleName.isEmpty()) {
+            createTitle(name, sendLaterNet)
         } else {
-            changeTitle(id, name)
+            changeTitle(id, name, sendLaterNet)
         }
     }
 
-      private val addEditTitleEventChannel = Channel<AddEditTitleEvent>()
-      val addEditTitleEvent = addEditTitleEventChannel.receiveAsFlow()
+    private val addEditTitleEventChannel = Channel<AddEditTitleEvent>()
+    val addEditTitleEvent = addEditTitleEventChannel.receiveAsFlow()
 
-    private fun changeTitle(titleID: Int, etName: String) = viewModelScope.launch {
+    private fun changeTitle(titleID: Int, etName: String, sendLaterNet: Boolean) =
+        viewModelScope.launch {
+            Log.d(TAG, "changeTitle: $sendLaterNet")
+            val titleEntity: TitleEntity = dao.getTeById(titleID)
+            val updateTitle: TitleEntity =
+                titleEntity.copy(name = etName, sendNetCreateUpdate = sendLaterNet)
+            dao.updateTe(updateTitle)
+            Log.d(TAG, "changeTitle: $updateTitle")
 
-        val titleEntity: TitleEntity = dao.getTeById(titleID)
-        val updateTitleEntity: TitleEntity = titleEntity.copy(name = etName)
+            if (!sendLaterNet) {
+                Log.d(TAG, "!sendLaterNet: $sendLaterNet")
+                checkForCompliance()
+                delay(200)
+                val crud = TitleUpdate()
+                crud.updateTitle(updateTitle)
+            }
+            addEditTitleEventChannel.send(AddEditTitleEvent.NavigateBack)
+        }
 
-        updateTitle(updateTitleEntity)
+    private fun createTitle(etName: String, sendLaterNet: Boolean) = viewModelScope.launch {
+        Log.d(TAG, "createTitleTitle: $sendLaterNet")
+        Log.d(TAG, "createTitleTitle: $etName")
+        val newTitle = TitleEntity(dirList = id, name = etName, sendNetCreateUpdate = sendLaterNet)
+        val idTitle = dao.insertTe(newTitle)
+
+        if (!sendLaterNet) {
+            checkForCompliance()
+            delay(200)
+            val crud = TitleCreate()
+            crud.createTitle(newTitle, idTitle, id)
+        }
+        addEditTitleEventChannel.send(AddEditTitleEvent.NavigateBack)
     }
 
-    private fun createTitle(etName: String) = viewModelScope.launch {
-        val newTitle = TitleEntity(dirList = id, name = etName)
-        val crud = TitleCreate()
-        val idTitle = dao.insertTe(newTitle)
-        crud.createTitle(newTitle, idTitle, id)
-        addEditTitleEventChannel.send(AddEditTitleEvent.NavigateBack)
+    private fun checkForCompliance() = viewModelScope.launch {
+        dao.getTitleByBool(bol = true).collect { value ->
+            val size = value.size - 1
+            for (i in 0..size) {
+                Log.d(TAG, "checkForComplianceTitle: $value")
+
+                val crud = TitleCreate()
+                crud.createTitle(value[i], value[i].id.toLong(), value[i].dirList)
+                val title = TitleEntity(
+                    dirList = value[i].dirList, name = value[i].name,
+                    sendNetCreateUpdate = false, created = value[i].created,
+                    id = value[i].id
+                )
+                dao.updateTe(title)
+            }
+        }
     }
 
     private fun updateTitle(updateTitleEntity: TitleEntity) = viewModelScope.launch {

@@ -14,7 +14,11 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import lex.neuron.memorieshub.data.RoomDao
+import lex.neuron.memorieshub.data.entity.DeleteEntity
+import lex.neuron.memorieshub.data.entity.MemoEntity
 import lex.neuron.memorieshub.data.entity.TitleEntity
+import lex.neuron.memorieshub.ui.firebase.crud.memotwocolumns.MemoTwoColumnsDelete
+import lex.neuron.memorieshub.ui.firebase.crud.title.OnlyTitleDelete
 import lex.neuron.memorieshub.ui.firebase.crud.title.TitleDelete
 
 class TitleViewModel @ViewModelInject constructor(
@@ -40,17 +44,64 @@ class TitleViewModel @ViewModelInject constructor(
             val size = value.size - 1
             for (i in 0..size) {
                 list.add(value[i].id)
+                val deleteEntity = DeleteEntity("memo", value[i].id, value[i].titleList)
+                dao.insertDelete(deleteEntity)
             }
         }
     }
 
-    fun onSwiped(title: TitleEntity) = viewModelScope.launch {
+    fun onSwiped(title: TitleEntity, sendLaterNet: Boolean) = viewModelScope.launch {
+        Log.d(TAG, "onSwipedTitle: $title")
+        Log.d(TAG, "onSwipedTitle: $sendLaterNet")
         delay(150)
         dao.deleteTe(title)
-        val crud = TitleDelete()
-        crud.deleteTitle(title, list)
+
+        if (!sendLaterNet) {
+            pendingDeletionTitle()
+            delay(200)
+            pendingDeletionMemo()
+            delay(200)
+            val crud = TitleDelete()
+            crud.deleteTitle(title, list)
+
+        }
+        if (sendLaterNet) {
+            delay(200)
+            val deleteEntity = DeleteEntity("title", title.id, title.dirList)
+            dao.insertDelete(deleteEntity)
+        }
     }
 
+    private fun pendingDeletionTitle() = viewModelScope.launch {
+        dao.getDeleteByName("title").collect { value ->
+            val size = value.size - 1
+            for (i in 0..size) {
+                Log.d(TAG, "pendingDeletionTitle: $value")
+                val crud = OnlyTitleDelete()
+                val title = TitleEntity(
+                    dirList = value[i].secondId, "", false,
+                    false, 0, value[i].id
+                )
+                crud.deleteTitle(title)
+            }
+        }
+    }
+
+    private fun pendingDeletionMemo() = viewModelScope.launch {
+        dao.getDeleteByName("memo").collect { value ->
+            val size = value.size - 1
+            for (i in 0..size) {
+                Log.d(lex.neuron.memorieshub.permission.internet.TAG, "pendingDeletion: $value")
+                val crud = MemoTwoColumnsDelete()
+                val memo = MemoEntity(
+                    value[i].secondId, "", false,
+                    false, "", 0, value[i].id
+                )
+                crud.deleteMemoTwoColumns(memo)
+
+            }
+        }
+    }
 
     fun onAddNewTitleClick() = viewModelScope.launch {
         eventChannel.send(TitleEvent.NavigateToAddScreen(dirId))

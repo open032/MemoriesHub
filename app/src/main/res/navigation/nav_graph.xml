@@ -27,9 +27,6 @@
         <action
             android:id="@+id/action_signIn_to_dir_list"
             app:destination="@id/dir_list" />
-        <action
-            android:id="@+id/action_signIn_to_listMainFrag"
-            app:destination="@id/listMainFrag" />
     </fragment>
     <fragment
         android:id="@+id/account"

@@ -1,6 +1,8 @@
 package lex.neuron.memorieshub.ui
 
 import android.content.ContentValues
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -19,13 +21,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import lex.neuron.memorieshub.R
 
 import lex.neuron.memorieshub.databinding.ActivityMainBinding
+import lex.neuron.memorieshub.permission.internet.ConnectionLiveData
+import lex.neuron.memorieshub.permission.internet.TAG
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
     }
 }

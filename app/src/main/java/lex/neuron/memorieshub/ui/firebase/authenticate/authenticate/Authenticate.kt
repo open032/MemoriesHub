@@ -13,11 +13,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.AndroidEntryPoint
 import lex.neuron.memorieshub.R
+import lex.neuron.memorieshub.data.MyDatabase
+import lex.neuron.memorieshub.data.RoomDao
+import lex.neuron.memorieshub.data.netnotwork.NetEntity
 import lex.neuron.memorieshub.util.AUTH
 
 @AndroidEntryPoint
 class Authenticate : Fragment(R.layout.frag_authenticate_firebase) {
 //    private lateinit var mAuth: FirebaseAuth
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,6 +40,4 @@ class Authenticate : Fragment(R.layout.frag_authenticate_firebase) {
             Log.e(TAG, "user = null", )
         }
     }
-
-
 }

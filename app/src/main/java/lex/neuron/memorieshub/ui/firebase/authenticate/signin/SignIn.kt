@@ -36,6 +36,7 @@ class SignIn : Fragment(R.layout.frag_sign_in) {
         binding = FragSignInBinding.bind(view)
 
         binding.apply {
+            viewModel.showDir()
             btnSignIn.setOnClickListener {
                 viewModel.signIn()
                 btnSignIn.visibility = View.GONE
@@ -87,7 +88,7 @@ class SignIn : Fragment(R.layout.frag_sign_in) {
         AUTH.signInWithCredential(credential)
             .addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
-                    Navigation.findNavController(mView).navigate(R.id.action_signIn_to_listMainFrag)
+                    Navigation.findNavController(mView).navigate(R.id.action_signIn_to_dir_list)
                     // Sign in success, update UI with the signed-in user's information
                     Log.e(ContentValues.TAG, "signInWithCredential:success")
 //                    val user = viewModel.auth.currentUser

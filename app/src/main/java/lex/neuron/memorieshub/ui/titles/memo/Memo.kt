@@ -1,5 +1,8 @@
 package lex.neuron.memorieshub.ui.titles.memo
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -47,7 +50,8 @@ class Memo : Fragment(R.layout.list_memo),
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val memo = adapterMemo.currentList[viewHolder.adapterPosition]
-                    viewModel.onSwipe(memo)
+                    val sendLaterNet = sendLaterNet()
+                    viewModel.onSwipe(memo, sendLaterNet)
                 }
             }).attachToRecyclerView(memoRv)
 
@@ -88,5 +92,23 @@ class Memo : Fragment(R.layout.list_memo),
 
     override fun onLongItemClick(memoEntity: MemoEntity) {
         viewModel.longClick(memoEntity)
+    }
+
+    private fun sendLaterNet(): Boolean {
+        var info: NetworkInfo? = null
+        var connectivity =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivity != null) {
+            info = connectivity!!.activeNetworkInfo
+
+            if (info != null) {
+                if (info!!.state == NetworkInfo.State.CONNECTED) {
+                    return false
+                }
+            } else {
+                return true
+            }
+        }
+        return true
     }
 }

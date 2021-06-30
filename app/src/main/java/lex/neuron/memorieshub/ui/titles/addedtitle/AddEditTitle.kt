@@ -1,5 +1,8 @@
 package lex.neuron.memorieshub.ui.titles.addedtitle
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -27,7 +30,8 @@ class AddEditTitle : Fragment(R.layout.add_edit_title) {
 
             fabSaveCard.setOnClickListener {
                 var name = editTextCardName.text.toString()
-                viewModel.onSaveClick(name)
+                val sendLaterNet = sendLaterNet()
+                viewModel.onSaveClick(name, sendLaterNet)
             }
 
         }
@@ -43,5 +47,22 @@ class AddEditTitle : Fragment(R.layout.add_edit_title) {
             }
         }
     }
-}
+
+    private fun sendLaterNet(): Boolean {
+        var info: NetworkInfo? = null
+        var connectivity =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivity != null) {
+            info = connectivity!!.activeNetworkInfo
+
+            if (info != null) {
+                if (info!!.state == NetworkInfo.State.CONNECTED) {
+                    return false
+                }
+            } else {
+                return true
+            }
+        }
+        return true
+    }}
 

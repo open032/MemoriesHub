@@ -1,5 +1,8 @@
 package lex.neuron.memorieshub.ui.titles.title
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import lex.neuron.memorieshub.R
 import lex.neuron.memorieshub.data.entity.TitleEntity
@@ -29,11 +33,11 @@ class Title : Fragment(R.layout.list_title),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var activity: AppCompatActivity = getActivity() as AppCompatActivity
+//        var activity: AppCompatActivity = getActivity() as AppCompatActivity
 
         val binding = ListTitleBinding.bind(view)
 
-        activity.setSupportActionBar(binding.bottomAppBar)
+//        activity.setSupportActionBar(binding.bottomAppBar)
 
         val listMainAdapter = TitleAdapter(this, this)
 
@@ -59,7 +63,8 @@ class Title : Fragment(R.layout.list_title),
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val title = listMainAdapter.currentList[viewHolder.adapterPosition]
                     viewModel.memoList(title)
-                    viewModel.onSwiped(title)
+                    val sendLaterNet = sendLaterNet()
+                    viewModel.onSwiped(title, sendLaterNet)
                 }
             }).attachToRecyclerView(mainListRv)
 
@@ -113,26 +118,25 @@ class Title : Fragment(R.layout.list_title),
                 }.exhaustive
             }
         }
-        setHasOptionsMenu(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_title_entity, menu)
+    private fun sendLaterNet(): Boolean {
+        var info: NetworkInfo? = null
+        var connectivity =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivity != null) {
+            info = connectivity!!.activeNetworkInfo
 
-        val searchItem = menu.findItem(R.id.more_vert)
-    }
-
-    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.more_vert -> {
-                viewModel.moreVert()
+            if (info != null) {
+                if (info!!.state == NetworkInfo.State.CONNECTED) {
+                    return false
+                }
+            } else {
+                return true
             }
-           *//* android.R.id.home -> {
-                viewModel.onMenuClick()
-            }*//*
         }
-        return super.onOptionsItemSelected(item)
-    }*/
+        return true
+    }
 
     override fun onItemClick(titleEntity: TitleEntity) {
         viewModel.onTitleSelected(titleEntity)

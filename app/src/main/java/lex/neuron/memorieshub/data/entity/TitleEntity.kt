@@ -23,6 +23,8 @@ data class TitleEntity(
     @ColumnInfo(index = true)
     val dirList: Int,
     val name: String,
+    val sendNetCreateUpdate: Boolean = false,
+    val sendNetDelete: Boolean = false,
     val created: Long = System.currentTimeMillis(),
     @PrimaryKey(autoGenerate = true) val id: Int = 0
 ) : Parcelable {
