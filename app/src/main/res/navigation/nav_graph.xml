@@ -91,6 +91,9 @@
         <argument
             android:name="idmemo"
             app:argType="integer" />
+        <argument
+            android:name="testable"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/dir_list"
@@ -102,6 +105,9 @@
         <action
             android:id="@+id/action_bottomTest_to_addEditDir"
             app:destination="@id/addEditDir" />
+        <action
+            android:id="@+id/action_dir_list_to_signIn"
+            app:destination="@id/signIn" />
     </fragment>
     <fragment
         android:id="@+id/addEditDir"

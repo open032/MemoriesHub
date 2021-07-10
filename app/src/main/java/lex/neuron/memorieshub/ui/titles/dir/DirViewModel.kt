@@ -8,6 +8,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -24,6 +26,7 @@ import lex.neuron.memorieshub.ui.firebase.crud.dir.MemoForDelete
 import lex.neuron.memorieshub.ui.firebase.crud.dir.OnlyDirDelete
 import lex.neuron.memorieshub.ui.firebase.crud.memotwocolumns.MemoTwoColumnsDelete
 import lex.neuron.memorieshub.ui.firebase.crud.title.OnlyTitleDelete
+import lex.neuron.memorieshub.util.AUTH
 
 class DirViewModel @ViewModelInject constructor(
     private val dao: RoomDao,
@@ -32,6 +35,8 @@ class DirViewModel @ViewModelInject constructor(
     private val eventChannel = Channel<DirEvent>()
     private var listTitle: MutableList<Int> = ArrayList()
     private var listMemo: MutableList<MemoForDelete> = ArrayList()
+
+
 
 
     private val id = state.get<Int>("id")
@@ -76,13 +81,14 @@ class DirViewModel @ViewModelInject constructor(
         }
     }
 
-    fun onSwiped(dir: DirEntity, sendLaterNet: Boolean) = viewModelScope.launch {
+    fun deleteItem(dir: DirEntity, sendLaterNet: Boolean) = viewModelScope.launch {
         Log.d(TAG, "onSwipedDir: $dir")
         Log.d(TAG, "onSwipedDir: $sendLaterNet")
         delay(150)
         dao.deleteDir(dir)
 
         if (!sendLaterNet) {
+            Log.d(TAG, "!sendLaterNetDir: ")
             pendingDeletionDir()
             delay(200)
             pendingDeletionTitle()
@@ -93,6 +99,7 @@ class DirViewModel @ViewModelInject constructor(
             crud.deleteDir(dir, listTitle, listMemo)
         }
         if (sendLaterNet) {
+            Log.d(TAG, "sendLaterNet: ")
             delay(200)
             val deleteEntity = DeleteEntity("dir", dir.id)
             dao.insertDelete(deleteEntity)
@@ -107,7 +114,7 @@ class DirViewModel @ViewModelInject constructor(
                 val crud = MemoTwoColumnsDelete()
                 val memo = MemoEntity(
                     value[i].secondId, "", false,
-                    false, "", 0, value[i].id
+                    false,true, "", 0, value[i].id
                 )
                 crud.deleteMemoTwoColumns(memo)
 
@@ -116,6 +123,7 @@ class DirViewModel @ViewModelInject constructor(
     }
 
     private fun pendingDeletionTitle() = viewModelScope.launch {
+        Log.d(TAG, "pendingDeletionTitle: ")
         dao.getDeleteByName("title").collect { value ->
             val size = value.size - 1
             for (i in 0..size) {
@@ -149,14 +157,21 @@ class DirViewModel @ViewModelInject constructor(
 
     }
 
-    fun onLongClick(dirEntity: DirEntity) = viewModelScope.launch {
+    fun renameItem(dirEntity: DirEntity) = viewModelScope.launch {
         eventChannel.send(DirEvent.NavigateToEditTitleDir(dirEntity.id, dirEntity.name))
     }
 
     fun addNewItem() = viewModelScope.launch {
+
         Log.d(TAG, "addNewItem: ")
 //        checkForCompliance()
         eventChannel.send(DirEvent.NavigateToAddDir)
+    }
+
+
+    fun authSignOut() = viewModelScope.launch {
+        AUTH.signOut()
+        eventChannel.send(DirEvent.NavigateToLogIn)
     }
 
     /*private fun checkForCompliance() = viewModelScope.launch {
@@ -177,6 +192,7 @@ class DirViewModel @ViewModelInject constructor(
 
     sealed class DirEvent {
         object NavigateToAddDir : DirEvent()
+        object NavigateToLogIn : DirEvent()
         data class NavigateToTitleList(val id: Int) : DirEvent()
         data class NavigateToEditTitleDir(val id: Int, val name: String) : DirEvent()
     }

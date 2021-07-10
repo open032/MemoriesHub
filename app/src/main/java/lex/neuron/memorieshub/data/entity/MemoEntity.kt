@@ -22,6 +22,7 @@ data class MemoEntity(
     @ColumnInfo(index = true)
     val titleList: Int,
     val title: String,
+    val testable: Boolean = true,
     val sendNetCreateUpdate: Boolean = false,
     val sendNetDelete: Boolean = false,
     val description: String,

@@ -13,6 +13,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/image_testable"
+                android:layout_width="22dp"
+                android:layout_height="21dp"
+                android:src="@drawable/ic_testable"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp" />
+
+        </RelativeLayout>
+
+
             <EditText
                 android:id="@+id/et_title_memo"
                 android:layout_width="wrap_content"
@@ -29,7 +41,6 @@
                 android:layout_alignParentRight="true"
                 android:textColor="@color/my_text_two"
                 android:textColorHint="@color/my_text_two"/>
-        </RelativeLayout>
 
         <TextView
             android:id="@+id/text_view_date_created_memo"
@@ -37,6 +48,12 @@
             android:layout_height="wrap_content"
             android:text="Date created:"
             android:textColor="@color/my_text_two" />
+
+        <Button
+            android:id="@+id/show_testable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="show testable"/>
 
     </LinearLayout>
 

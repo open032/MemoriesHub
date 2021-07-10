@@ -95,7 +95,7 @@ class TitleViewModel @ViewModelInject constructor(
                 val crud = MemoTwoColumnsDelete()
                 val memo = MemoEntity(
                     value[i].secondId, "", false,
-                    false, "", 0, value[i].id
+                    false, true,"", 0, value[i].id
                 )
                 crud.deleteMemoTwoColumns(memo)
 
@@ -107,7 +107,7 @@ class TitleViewModel @ViewModelInject constructor(
         eventChannel.send(TitleEvent.NavigateToAddScreen(dirId))
     }
 
-    fun onLongTitleSelected(titleEntity: TitleEntity) = viewModelScope.launch {
+    fun renameItem(titleEntity: TitleEntity) = viewModelScope.launch {
         eventChannel.send(TitleEvent.NavigateToEditTitleScreen(titleEntity.id, titleEntity.name))
 
     }

@@ -15,6 +15,7 @@ class MemoTwoColumnsUpdate {
         val memo = MemoTwoColumnsFirebase(
             updateMemoEntity.id.toLong(),
             updateMemoEntity.title,
+            updateMemoEntity.testable,
             updateMemoEntity.description,
             updateMemoEntity.createdDateFormatted,
             updateMemoEntity.titleList

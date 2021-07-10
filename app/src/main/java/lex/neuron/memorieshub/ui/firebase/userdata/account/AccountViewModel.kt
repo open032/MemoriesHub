@@ -20,7 +20,6 @@ class AccountViewModel @ViewModelInject constructor(
 
     fun authSignOut() {
         AUTH.signOut()
-//        Navigation.findNavController(getApplication()).navigate(R.id.action_account_to_signIn)
     }
 
 }

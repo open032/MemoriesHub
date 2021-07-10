@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/more_vert"
-        android:title="First"
+        android:title="Log Out"
         android:icon="@drawable/ic_more_vert"
-        app:showAsAction="ifRoom"/>
+        />
     <!--<item
         android:id="@+id/nav_second_fragment"
         android:title="Second"

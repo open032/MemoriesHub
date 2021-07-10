@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
@@ -12,9 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -25,7 +24,7 @@ import lex.neuron.memorieshub.util.exhaustive
 
 
 @AndroidEntryPoint
-class Title : Fragment(R.layout.list_title),
+class Title : Fragment(R.layout.list_title), TitleAdapter.RenameItem, TitleAdapter.DeleteItem,
     TitleAdapter.OnLongItemClickListener, TitleAdapter.OnClickListener {
 
     private val viewModel: TitleViewModel by viewModels()
@@ -35,18 +34,42 @@ class Title : Fragment(R.layout.list_title),
 
 //        var activity: AppCompatActivity = getActivity() as AppCompatActivity
 
+        var layoutPosition = false
+
         val binding = ListTitleBinding.bind(view)
 
 //        activity.setSupportActionBar(binding.bottomAppBar)
 
-        val listMainAdapter = TitleAdapter(this, this)
+        val listMainAdapter = TitleAdapter(this, this, this, this)
 
         binding.apply {
 
             mainListRv.apply {
                 adapter = listMainAdapter
                 layoutManager = LinearLayoutManager(requireContext())
-                setHasFixedSize(true)
+
+
+                layoutLG.setOnClickListener {
+                    layoutPosition = !layoutPosition
+                    if (layoutPosition) {
+                        layoutLG.setImageResource(R.drawable.ic_baseline_grid_on_24)
+                        layoutManager = GridLayoutManager(requireContext(), 2)
+                    } else {
+                        layoutLG.setImageResource(R.drawable.ic_liner_layout)
+                        layoutManager = LinearLayoutManager(requireContext())
+                    }
+                }
+
+
+
+                mainListRv.addItemDecoration(
+                    DividerItemDecoration(
+                        context,
+                        LinearLayoutManager.VERTICAL
+                    )
+                )
+
+//                setHasFixedSize(true)
             }
             ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
                 0,
@@ -143,6 +166,16 @@ class Title : Fragment(R.layout.list_title),
     }
 
     override fun onLongItemClick(titleEntity: TitleEntity) {
-        viewModel.onLongTitleSelected(titleEntity)
+//        viewModel.onLongTitleSelected(titleEntity)
+    }
+
+    override fun renameItem(titleEntity: TitleEntity) {
+        viewModel.renameItem(titleEntity)
+    }
+
+    override fun deleteItem(titleEntity: TitleEntity) {
+        viewModel.memoList(titleEntity)
+        val sendLaterNet = sendLaterNet()
+        viewModel.onSwiped(titleEntity, sendLaterNet)
     }
 }

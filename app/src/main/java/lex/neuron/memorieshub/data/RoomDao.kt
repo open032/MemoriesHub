@@ -71,6 +71,10 @@ interface RoomDao {
     fun getMemoByBool(bol: Boolean): Flow<List<MemoEntity>>
 
 
+
+
+
+
     // TitleEntity
     @Query("SELECT * FROM title_table")
     fun getTe(): Flow<List<TitleEntity>>

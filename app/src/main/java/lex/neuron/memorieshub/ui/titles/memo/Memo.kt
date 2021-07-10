@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,12 +31,30 @@ class Memo : Fragment(R.layout.list_memo),
         val binding = ListMemoBinding.bind(view)
         val adapterMemo = MemoAdapter(this)
 
+        var layoutPosition = false
+
         binding.apply {
             memoRv.apply {
                 adapter = adapterMemo
                 layoutManager = LinearLayoutManager(requireContext())
                 setHasFixedSize(true)
+
+
+
+                layoutLG.setOnClickListener {
+                    layoutPosition = !layoutPosition
+                    if (layoutPosition) {
+                        layoutLG.setImageResource(R.drawable.ic_baseline_grid_on_24)
+                        layoutManager = GridLayoutManager(requireContext(), 2)
+                    } else {
+                        layoutLG.setImageResource(R.drawable.ic_liner_layout)
+                        layoutManager = LinearLayoutManager(requireContext())
+                    }
+                }
+
             }
+
+
             ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
                 0,
                 ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -72,13 +91,19 @@ class Memo : Fragment(R.layout.list_memo),
                 when (event) {
                     is MemoViewModel.MemoEvent.NavigateToAddScreen -> {
                         val action =
-                            MemoDirections.actionMemoFragToAddEditMemo(event.id, "", "", -1)
+                            MemoDirections.actionMemoFragToAddEditMemo(
+                                event.id,
+                                "",
+                                "",
+                                -1,
+                                true
+                            )
                         findNavController().navigate(action)
                     }
                     is MemoViewModel.MemoEvent.NavigateToEditScreen -> {
                         val action =
                             MemoDirections.actionMemoFragToAddEditMemo(
-                                event.id, event.titleMemo, event.description, event.idMemo
+                                event.id, event.titleMemo, event.description, event.idMemo, event.testable
                             )
                         findNavController().navigate(action)
                     }

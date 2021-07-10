@@ -63,7 +63,7 @@ class MemoViewModel @ViewModelInject constructor(
                 val crud = MemoTwoColumnsDelete()
                 val memo = MemoEntity(
                     value[i].secondId, "", false,
-                    false, "", 0, value[i].id
+                    false, true,"", 0, value[i].id
                 )
                 crud.deleteMemoTwoColumns(memo)
 
@@ -83,7 +83,7 @@ class MemoViewModel @ViewModelInject constructor(
         eventChannel.send(
             MemoEvent.NavigateToEditScreen(
                 memoEntity.id,
-                memoEntity.title, memoEntity.description, memoEntity.titleList
+                memoEntity.title, memoEntity.testable, memoEntity.description, memoEntity.titleList
             )
         )
     }
@@ -94,6 +94,7 @@ class MemoViewModel @ViewModelInject constructor(
         data class NavigateToEditScreen(
             val id: Int,
             val titleMemo: String,
+            val testable: Boolean,
             val description: String,
             val idMemo: Int
         ) : MemoEvent()

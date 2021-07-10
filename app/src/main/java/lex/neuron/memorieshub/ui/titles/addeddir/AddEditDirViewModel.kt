@@ -16,6 +16,8 @@ import lex.neuron.memorieshub.data.entity.DirEntity
 import lex.neuron.memorieshub.permission.internet.TAG
 import lex.neuron.memorieshub.ui.firebase.crud.dir.DirCreate
 import lex.neuron.memorieshub.ui.firebase.crud.dir.DirUpdate
+import lex.neuron.memorieshub.ui.firebase.crud.read.AccountData
+import lex.neuron.memorieshub.ui.firebase.crud.read.ReadFirebase
 
 class AddEditDirViewModel @ViewModelInject constructor(
     private val dao: RoomDao,
@@ -103,12 +105,8 @@ class AddEditDirViewModel @ViewModelInject constructor(
     }
 
     fun showLog() = viewModelScope.launch {
-        dao.getDelete().collect { value ->
-            val size = value.size - 1
-            for (i in 0..size) {
-                Log.e(TAG, "showLog: $value")
-            }
-        }
+        val crud = AccountData()
+        crud.getAccountData()
     }
 
     sealed class AddEditEvent {

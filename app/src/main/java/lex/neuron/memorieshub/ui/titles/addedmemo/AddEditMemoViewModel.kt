@@ -6,6 +6,8 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -23,10 +25,13 @@ class AddEditMemoViewModel @ViewModelInject constructor(
 ) : ViewModel() {
     private val mId = state.get<Int>("id")
     private val mTitle = state.get<String>("titleMemo")
+    private val mTestable = state.get<Boolean>("testable")
     private val mDesc = state.get<String>("description")
     private val mIdMemo = state.get<Int>("idmemo")
-
     private val addEditTitleEventChannel = Channel<AddEditMemoEvent>()
+
+
+
     val addEditMemoEvent = addEditTitleEventChannel.receiveAsFlow()
 
     var idMemo = state.get<Int>("memoId") ?: mId ?: "void memoId"
@@ -35,6 +40,11 @@ class AddEditMemoViewModel @ViewModelInject constructor(
             state.set("memoId", value)
         }
     var titleMemo = state.get<String>("nameMemo") ?: mTitle ?: "void nameMemo"
+        set(value) {
+            field = value
+            state.set("nameMemo", value)
+        }
+    var testableMemo = state.get<Boolean>("testableMemo") ?: mTestable ?: "void testableMemo"
         set(value) {
             field = value
             state.set("nameMemo", value)
@@ -53,6 +63,12 @@ class AddEditMemoViewModel @ViewModelInject constructor(
     val title = titleMemo.toString()
     val desc = descriptionMemo.toString()
     val idTl = tIdMemo.toString().toInt()
+    var testableInput = testableMemo.toString().toBoolean()
+
+
+
+    var testableVM: Boolean = testableInput
+
 
     fun onSaveClick(fabTitle: String, fabDesc: String, sendLaterNet: Boolean) {
         if (desc.isEmpty()) {
@@ -66,17 +82,20 @@ class AddEditMemoViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             val memoEntity: MemoEntity = dao.getMemoById(id)
             val updateMemo: MemoEntity = memoEntity.copy(
-                titleList = idTl, title = fabTitle, sendNetCreateUpdate = true,
-                description = fabDesc, id = id
+                titleList = idTl,
+                title = fabTitle,
+                testable = testableVM,
+                sendNetCreateUpdate = sendLaterNet,
+                description = fabDesc,
+                id = id
             )
-            /*Log.d(TAG, "updateMemo: $updateMemoEntity")
-           Log.d(TAG, "updateMemo: $sendLaterNet")*/
-            Log.e(TAG, "updateMemo: $sendLaterNet")
+            Log.d(TAG, "updateMemo: $memoEntity")
+            Log.d(TAG, "updateMemo: $sendLaterNet")
             dao.updateMemo(updateMemo)
 
             // if has internet
             if (!sendLaterNet) {
-                Log.e(TAG, "!sendLaterNet: $sendLaterNet")
+                Log.d(TAG, "!sendLaterNet: $sendLaterNet")
                 checkForCompliance()
                 delay(200)
                 val crud = MemoTwoColumnsUpdate()
@@ -84,31 +103,33 @@ class AddEditMemoViewModel @ViewModelInject constructor(
             }
             addEditTitleEventChannel.send(AddEditMemoEvent.NavigationBack)
 
-//        updateMemo(updateMemoEntity, sendLaterNet)
         }
 
 
     private fun createMemo(fabTitle: String, fabDesc: String, sendLaterNet: Boolean) =
         viewModelScope.launch {
-            val newMemo = MemoEntity(
-                titleList = id, title = fabTitle, description = fabDesc,
-                sendNetCreateUpdate = sendLaterNet
-            )
-            val idMemo = dao.insertMemo(newMemo)
-            Log.d(TAG, "createMemo: $newMemo")
+            Log.d(TAG, "sendLaterNetMemo: $sendLaterNet")
+              val newMemo = MemoEntity(
+                  titleList = id, title = fabTitle, testable = testableVM, description = fabDesc,
+                  sendNetCreateUpdate = sendLaterNet
+              )
+              val idMemo = dao.insertMemo(newMemo)
+              Log.d(TAG, "createMemo: $newMemo")
 
-            if (!sendLaterNet) {
-                checkForCompliance()
-                delay(200)
-                val crud = MemoTwoColumnsCreate()
-                crud.createMemoTwoColumn(newMemo, idMemo, id)
-                Log.d(TAG, "createMemo: $newMemo, $sendLaterNet")
+              if (!sendLaterNet) {
+                  Log.d(TAG, "!sendLaterNet: ")
+                  checkForCompliance()
+                  delay(200)
+                  val crud = MemoTwoColumnsCreate()
+                  crud.createMemoTwoColumn(newMemo, idMemo, id)
+                  Log.d(TAG, "createMemo: $newMemo, $sendLaterNet")
 
-            }
-            addEditTitleEventChannel.send(AddEditMemoEvent.NavigationBack)
+              }
+              addEditTitleEventChannel.send(AddEditMemoEvent.NavigationBack)
         }
 
     private fun checkForCompliance() = viewModelScope.launch {
+        Log.d(TAG, "checkForComplianceMemo: ")
         dao.getMemoByBool(bol = true).collect { value ->
             val size = value.size - 1
             for (i in 0..size) {
@@ -118,7 +139,7 @@ class AddEditMemoViewModel @ViewModelInject constructor(
                 crud.createMemoTwoColumn(value[i], value[i].id.toLong(), value[i].titleList)
                 val memo = MemoEntity(
                     titleList = value[i].titleList, title = value[i].title,
-                    sendNetCreateUpdate = false,
+                    testable = value[i].testable, sendNetCreateUpdate = false,
                     description = value[i].description,
                     created = value[i].created, id = value[i].id
                 )
@@ -127,10 +148,10 @@ class AddEditMemoViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun updateMemo(updateMemoEntity: MemoEntity, sendLaterNet: Boolean) =
+/*    private fun updateMemo(updateMemoEntity: MemoEntity, sendLaterNet: Boolean) =
         viewModelScope.launch {
-            /*Log.d(TAG, "updateMemo: $updateMemoEntity")
-            Log.d(TAG, "updateMemo: $sendLaterNet")*/
+            *//*Log.d(TAG, "updateMemo: $updateMemoEntity")
+            Log.d(TAG, "updateMemo: $sendLaterNet")*//*
             Log.e(TAG, "updateMemo: $sendLaterNet")
             dao.updateMemo(updateMemoEntity)
 
@@ -141,9 +162,48 @@ class AddEditMemoViewModel @ViewModelInject constructor(
                 crud.updateMemoTwoColumns(updateMemoEntity)
             }
             addEditTitleEventChannel.send(AddEditMemoEvent.NavigationBack)
-        }
+        }*/
+
+
+    fun changeTestable(sendLaterNet: Boolean) = viewModelScope.launch {
+        val memo = dao.getMemoById(id)
+        testableVM = !testableVM
+
+        Log.d(TAG, "changeTestable -->: $testableVM")
+
+        val changeTestable: MemoEntity = memo.copy(
+            testable = testableVM,
+            sendNetCreateUpdate = sendLaterNet,
+            id = id
+        )
+        dao.updateMemo(changeTestable)
+    }
+
+    // check for ViewModel
+   /* fun showRoomTestable() = viewModelScope.launch {
+//        Log.e(TAG, "showRoomTestable:%  %  %  %  %  $testable  & & & & &    ")
+       val memo = dao.getMemoById(id)
+        testableVM = memo.testable
+        delay(100L)
+        Log.d(TAG, "checkTestable(): ${testableVM}")
+        Log.d(TAG, "checkTestable(): ${memo}")
+    }*/
+
 
     sealed class AddEditMemoEvent {
         object NavigationBack : AddEditMemoEvent()
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

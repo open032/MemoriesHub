@@ -44,12 +44,12 @@ abstract class MyDatabase : RoomDatabase() {
                 dao.insertTe(TitleEntity(2, "Geology Time", true))
                 dao.insertTe(TitleEntity(4, "Coffee", true))
 
-                dao.insertMemo(MemoEntity(1, "Hock", true, false, "room" ))
-                dao.insertMemo(MemoEntity(2, "Temp", true, false,  "To day" ))
-                dao.insertMemo(MemoEntity(3, "Methane", true, false, "CH4" ))
-                dao.insertMemo(MemoEntity(3, "Ethane",  true, false,"C2H6" ))
-                dao.insertMemo(MemoEntity(4, "Mesozoic",  true, false,"Start 240 Millions of years ago" ))
-                dao.insertMemo(MemoEntity(5, "Hard",  true, false,"Drink" ))
+                dao.insertMemo(MemoEntity(1, "Hock", true, true, true, "room" ))
+                dao.insertMemo(MemoEntity(2, "Temp", true, true, true, "To day" ))
+                dao.insertMemo(MemoEntity(3, "Methane", true, true, true,"CH4" ))
+                dao.insertMemo(MemoEntity(3, "Ethane",  true, true,true,"C2H6" ))
+                dao.insertMemo(MemoEntity(4, "Mesozoic",  true, true,true,"Start 240 Millions of years ago" ))
+                dao.insertMemo(MemoEntity(5, "Hard",  true, true,true,"Drink" ))
             }
         }
     }

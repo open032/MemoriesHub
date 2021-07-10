@@ -11,6 +11,7 @@ class MemoTwoColumnsCreate {
     fun createMemoTwoColumn(memoEntity: MemoEntity, idMemo: Long, idTitle: Int) {
         val memo = MemoTwoColumnsFirebase(
             idMemo, memoEntity.title,
+            memoEntity.testable,
             memoEntity.description,
             memoEntity.createdDateFormatted,
             idTitle

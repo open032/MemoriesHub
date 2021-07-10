@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import lex.neuron.memorieshub.R
 import lex.neuron.memorieshub.databinding.AddEditMemoBinding
+import lex.neuron.memorieshub.permission.internet.TAG
 import lex.neuron.memorieshub.util.exhaustive
 
 @AndroidEntryPoint
@@ -27,6 +29,48 @@ class AddEditMemo : Fragment(R.layout.add_edit_memo) {
         binding.apply {
             etTitleMemo.setText(viewModel.title)
             etDescriptionMemo.setText(viewModel.desc)
+
+//^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
+
+            showTestable.setOnClickListener {
+                Log.d(TAG, "showTestable: ${viewModel.testableVM}")
+            }
+
+//          Input, show testable
+            var testable = viewModel.testableVM
+            Log.e(TAG, "viewModel.testableVM: ${viewModel.testableVM}", )
+
+            if (testable) {
+                imageTestable.setImageResource(R.drawable.ic_testable)
+                Log.d(TAG, "if testable: $testable")
+            }
+            if (!testable) {
+                imageTestable.setImageResource(R.drawable.ic_not_testable)
+                Log.d(TAG, "if !testable: $testable")
+            }
+
+
+
+
+            imageTestable.setOnClickListener {
+                testable = !testable
+
+                viewModel.changeTestable(sendLaterNet())
+
+
+
+                if (testable) {
+                    Log.d(TAG, "imageTestable: $  TRUE  $$")
+                    imageTestable.setImageResource(R.drawable.ic_testable)
+                }
+                if (!testable) {
+                    Log.d(TAG, "imageTestable: $  FALSE  $$")
+                    imageTestable.setImageResource(R.drawable.ic_not_testable)
+                }
+            }
+
+
+//_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
             fabSaveMemo.setOnClickListener {
                 val sendLaterNet = sendLaterNet()
