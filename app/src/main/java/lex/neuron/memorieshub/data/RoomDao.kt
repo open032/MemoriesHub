@@ -6,7 +6,7 @@ import lex.neuron.memorieshub.data.entity.DeleteEntity
 import lex.neuron.memorieshub.data.entity.DirEntity
 import lex.neuron.memorieshub.data.entity.MemoEntity
 import lex.neuron.memorieshub.data.entity.TitleEntity
-import lex.neuron.memorieshub.data.netnotwork.NetEntity
+
 
 @Dao
 interface RoomDao {
@@ -54,7 +54,16 @@ interface RoomDao {
     suspend fun deleteDir(dirEntity: DirEntity)
 
 
-    // ********** Query **********
+    @Query("DELETE FROM memo_table")
+    suspend fun deleteAllMemo()
+
+    @Query("DELETE FROM title_table")
+    suspend fun deleteAllTitle()
+
+    @Query("DELETE FROM dir_table")
+    suspend fun deleteAllDir()
+
+// ********** Query **********
 
 
     // Memo
@@ -69,10 +78,6 @@ interface RoomDao {
 
     @Query("SELECT * FROM memo_table WHERE sendNetCreateUpdate = :bol")
     fun getMemoByBool(bol: Boolean): Flow<List<MemoEntity>>
-
-
-
-
 
 
     // TitleEntity
@@ -108,10 +113,10 @@ interface RoomDao {
 
     @Query("SELECT * FROM delete_table WHERE name = :name")
     fun getDeleteByName(name: String): Flow<List<DeleteEntity>>
-   /* // Net
-    @Query("SELECT * FROM net_table")
-    fun getNet(): Flow<List<NetEntity>>
+/* // Net
+ @Query("SELECT * FROM net_table")
+ fun getNet(): Flow<List<NetEntity>>
 
-    @Query("SELECT * FROM net_table WHERE id = :id")
-    suspend fun getNetById(id: Int): NetEntity*/
+ @Query("SELECT * FROM net_table WHERE id = :id")
+ suspend fun getNetById(id: Int): NetEntity*/
 }

@@ -172,6 +172,10 @@ class AddEditMemoViewModel @ViewModelInject constructor(
         Log.d(TAG, "changeTestable -->: $testableVM")
 
         val changeTestable: MemoEntity = memo.copy(
+/*
+            titleList = idTl,
+            title = memo.title,
+*/
             testable = testableVM,
             sendNetCreateUpdate = sendLaterNet,
             id = id

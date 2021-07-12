@@ -174,6 +174,12 @@ class DirViewModel @ViewModelInject constructor(
         eventChannel.send(DirEvent.NavigateToLogIn)
     }
 
+    fun deleteAllRoom() = viewModelScope.launch {
+        dao.deleteAllMemo()
+        dao.deleteAllTitle()
+        dao.deleteAllDir()
+    }
+
     /*private fun checkForCompliance() = viewModelScope.launch {
         dao.getDirByBool(bol = false).collect { value ->
             val size = value.size - 1

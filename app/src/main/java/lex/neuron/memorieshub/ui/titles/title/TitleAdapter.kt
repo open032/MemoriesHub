@@ -20,10 +20,13 @@ import lex.neuron.memorieshub.ui.titles.dir.DirAdapter
 class TitleAdapter(
     private val renameItem: TitleAdapter.RenameItem,
     private val deleteItem: TitleAdapter.DeleteItem,
+    private val testingItem: TitleAdapter.TestingItem,
     private val longListener: OnLongItemClickListener,
     private val clickListener: OnClickListener
 ) :
     ListAdapter<TitleEntity, TitleAdapter.ListMainViewHolder>(DiffCallback()) {
+
+    lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListMainViewHolder {
         val binding = ItemTitleBinding.inflate(
@@ -33,8 +36,6 @@ class TitleAdapter(
         return ListMainViewHolder(binding)
     }
 
-
-    lateinit var context: Context
 
     override fun onBindViewHolder(holder: ListMainViewHolder, position: Int) {
         val currentItem = getItem(position)
@@ -92,6 +93,11 @@ class TitleAdapter(
                                 Log.d(TAG, "delete: ")
                             }
                             R.id.testing -> {
+                                val position = adapterPosition
+                                if (position != RecyclerView.NO_POSITION) {
+                                    val title = getItem(position)
+                                    testingItem.testingItem(title)
+                                }
                                 Log.d(TAG, "testing: ")
                             }
                         }
@@ -99,7 +105,6 @@ class TitleAdapter(
                     }
 
                     popup.show()//showing popup menu
-                    Log.e(TAG, "bind: ")
                 }
             }
         }
@@ -112,6 +117,10 @@ class TitleAdapter(
 
     interface RenameItem {
         fun renameItem(titleEntity: TitleEntity)
+    }
+
+    interface TestingItem {
+        fun testingItem(titleEntity: TitleEntity)
     }
 
     interface OnClickListener {

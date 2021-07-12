@@ -20,11 +20,14 @@ import kotlinx.coroutines.flow.collect
 import lex.neuron.memorieshub.R
 import lex.neuron.memorieshub.data.entity.TitleEntity
 import lex.neuron.memorieshub.databinding.ListTitleBinding
+import lex.neuron.memorieshub.permission.internet.TAG
+import lex.neuron.memorieshub.ui.firebase.crud.title.TitleDelete
 import lex.neuron.memorieshub.util.exhaustive
 
 
 @AndroidEntryPoint
 class Title : Fragment(R.layout.list_title), TitleAdapter.RenameItem, TitleAdapter.DeleteItem,
+    TitleAdapter.TestingItem,
     TitleAdapter.OnLongItemClickListener, TitleAdapter.OnClickListener {
 
     private val viewModel: TitleViewModel by viewModels()
@@ -40,7 +43,7 @@ class Title : Fragment(R.layout.list_title), TitleAdapter.RenameItem, TitleAdapt
 
 //        activity.setSupportActionBar(binding.bottomAppBar)
 
-        val listMainAdapter = TitleAdapter(this, this, this, this)
+        val listMainAdapter = TitleAdapter(this, this, this, this, this)
 
         binding.apply {
 
@@ -71,6 +74,7 @@ class Title : Fragment(R.layout.list_title), TitleAdapter.RenameItem, TitleAdapt
 
 //                setHasFixedSize(true)
             }
+/*
             ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
                 0,
                 ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -90,6 +94,7 @@ class Title : Fragment(R.layout.list_title), TitleAdapter.RenameItem, TitleAdapt
                     viewModel.onSwiped(title, sendLaterNet)
                 }
             }).attachToRecyclerView(mainListRv)
+*/
 
             fabAddTask.setOnClickListener {
                 viewModel.onAddNewTitleClick()
@@ -131,12 +136,17 @@ class Title : Fragment(R.layout.list_title), TitleAdapter.RenameItem, TitleAdapt
                     is TitleViewModel.TitleEvent.NavigateToBottomSheet -> {
                         val action =
                             TitleDirections.actionListMainFragToBottomTest()
-                        findNavController().navigate(action);
+                        findNavController().navigate(action)
+                    }
+                    is TitleViewModel.TitleEvent.NavigateToTesting -> {
+                        val action =
+                            TitleDirections.actionListMainFragToTesting2(event.id)
+                        findNavController().navigate(action)
                     }
                     is TitleViewModel.TitleEvent.NavigateBack -> {
                         val action =
                             TitleDirections.actionListMainFragToBottomTest()
-                            findNavController().navigate(action)
+                        findNavController().navigate(action)
                     }
                 }.exhaustive
             }
@@ -176,6 +186,10 @@ class Title : Fragment(R.layout.list_title), TitleAdapter.RenameItem, TitleAdapt
     override fun deleteItem(titleEntity: TitleEntity) {
         viewModel.memoList(titleEntity)
         val sendLaterNet = sendLaterNet()
-        viewModel.onSwiped(titleEntity, sendLaterNet)
+        viewModel.deleteItem(titleEntity, sendLaterNet)
+    }
+
+    override fun testingItem(titleEntity: TitleEntity) {
+        viewModel.testingItem(titleEntity)
     }
 }

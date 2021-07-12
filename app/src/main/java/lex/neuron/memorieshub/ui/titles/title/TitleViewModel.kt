@@ -50,7 +50,7 @@ class TitleViewModel @ViewModelInject constructor(
         }
     }
 
-    fun onSwiped(title: TitleEntity, sendLaterNet: Boolean) = viewModelScope.launch {
+    fun deleteItem(title: TitleEntity, sendLaterNet: Boolean) = viewModelScope.launch {
         Log.d(TAG, "onSwipedTitle: $title")
         Log.d(TAG, "onSwipedTitle: $sendLaterNet")
         delay(150)
@@ -109,7 +109,10 @@ class TitleViewModel @ViewModelInject constructor(
 
     fun renameItem(titleEntity: TitleEntity) = viewModelScope.launch {
         eventChannel.send(TitleEvent.NavigateToEditTitleScreen(titleEntity.id, titleEntity.name))
+    }
 
+    fun testingItem(titleEntity: TitleEntity) = viewModelScope.launch {
+        eventChannel.send(TitleEvent.NavigateToTesting(titleEntity.id))
     }
 
     fun onTitleSelected(titleEntity: TitleEntity) = viewModelScope.launch {
@@ -125,6 +128,7 @@ class TitleViewModel @ViewModelInject constructor(
     sealed class TitleEvent {
         object NavigateBack : TitleEvent()
         object NavigateToBottomSheet : TitleEvent()
+        data class NavigateToTesting(val id: Int) : TitleEvent()
         data class NavigateToAddScreen(val id: Int) : TitleEvent()
         data class NavigateToEditTitleScreen(val id: Int, val name: String) : TitleEvent()
         data class NavigateToAnotherList(val id: Int, val name: String) : TitleEvent()

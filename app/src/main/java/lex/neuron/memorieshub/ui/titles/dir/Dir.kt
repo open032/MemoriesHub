@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.collect
 import lex.neuron.memorieshub.R
 import lex.neuron.memorieshub.data.entity.DirEntity
 import lex.neuron.memorieshub.databinding.ListDirBinding
+import lex.neuron.memorieshub.permission.internet.TAG
 import lex.neuron.memorieshub.ui.firebase.crud.read.AccountData
 import lex.neuron.memorieshub.util.exhaustive
 
@@ -107,11 +109,29 @@ DirAdapter.OnClickListener, DirAdapter.OnLongItemClickListener {
                     popup.menuInflater.inflate(R.menu.menu_account, popup.menu)
 
 
-                    popup.setOnMenuItemClickListener {
-                        viewModel.authSignOut()
+
+
+
+                        popup.setOnMenuItemClickListener { item ->
+                            when (item.itemId) {
+                                R.id.log_out -> {
+                                    viewModel.authSignOut()
+                                    Log.d(TAG, "login out: ")
+                                }
+                                R.id.cloud -> {
+                                    viewModel.deleteAllRoom()
+                                    val crud = AccountData()
+                                    crud.getAccountData()
+                                    Log.d(TAG, "Do it like in the cloud: ")
+                                }
+                            }
+                            true
+                        }
+
+                       true
+                        /*
 //                        Navigation.findNavController(view).navigate(R.id.action_account_to_signIn)
-                        true
-                    }
+                        true*/
 
                     popup.show()//showing popup menu
 

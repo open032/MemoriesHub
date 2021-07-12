@@ -2,16 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/more_vert"
-        android:title="Log Out"
-        android:icon="@drawable/ic_more_vert"
-        />
-    <!--<item
-        android:id="@+id/nav_second_fragment"
-        android:title="Second"
-        app:showAsAction="ifRoom"/>
+        android:id="@+id/log_out"
+        android:title="Log Out" />
     <item
-        android:id="@+id/nav_third_fragment"
-        android:title="Third"
-        app:showAsAction="ifRoom"/>-->
+        android:id="@+id/cloud"
+        android:title="Do it like in the cloud" />
+    <!-- <item
+         android:id="@+id/nav_third_fragment"
+         android:title="Third"
+         app:showAsAction="ifRoom"/>-->
 </menu>

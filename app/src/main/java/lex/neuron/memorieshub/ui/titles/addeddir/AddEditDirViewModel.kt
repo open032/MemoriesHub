@@ -17,7 +17,6 @@ import lex.neuron.memorieshub.permission.internet.TAG
 import lex.neuron.memorieshub.ui.firebase.crud.dir.DirCreate
 import lex.neuron.memorieshub.ui.firebase.crud.dir.DirUpdate
 import lex.neuron.memorieshub.ui.firebase.crud.read.AccountData
-import lex.neuron.memorieshub.ui.firebase.crud.read.ReadFirebase
 
 class AddEditDirViewModel @ViewModelInject constructor(
     private val dao: RoomDao,
