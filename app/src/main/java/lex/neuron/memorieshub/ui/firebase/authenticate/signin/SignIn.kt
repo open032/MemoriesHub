@@ -2,7 +2,6 @@ package lex.neuron.memorieshub.ui.firebase.authenticate.signin
 
 import android.app.Activity
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,9 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -36,7 +33,6 @@ class SignIn : Fragment(R.layout.frag_sign_in) {
         binding = FragSignInBinding.bind(view)
 
         binding.apply {
-            viewModel.showDir()
             btnSignIn.setOnClickListener {
                 viewModel.signIn()
                 btnSignIn.visibility = View.GONE
@@ -47,7 +43,10 @@ class SignIn : Fragment(R.layout.frag_sign_in) {
 
 
 
-        viewModel.googleSignInClient = GoogleSignIn.getClient(requireContext(), viewModel.gso(getString(R.string.default_web_client_id)))
+        viewModel.googleSignInClient = GoogleSignIn.getClient(
+            requireContext(),
+            viewModel.gso(getString(R.string.default_web_client_id))
+        )
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.signInEvent.collect { event ->

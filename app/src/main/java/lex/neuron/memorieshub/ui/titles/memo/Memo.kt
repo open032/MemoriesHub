@@ -10,9 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import lex.neuron.memorieshub.R
@@ -22,18 +20,22 @@ import lex.neuron.memorieshub.util.exhaustive
 
 @AndroidEntryPoint
 class Memo : Fragment(R.layout.list_memo),
-    MemoAdapter.OnLongClickListener {
+    MemoAdapter.RenameItem, MemoAdapter.DeleteItem {
     private val viewModel: MemoViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = ListMemoBinding.bind(view)
-        val adapterMemo = MemoAdapter(this)
+        val adapterMemo = MemoAdapter(this, this)
 
         var layoutPosition = false
 
         binding.apply {
+            viewModel.checkMemo()
+
+            address.text = viewModel.titleName
+
             memoRv.apply {
                 adapter = adapterMemo
                 layoutManager = LinearLayoutManager(requireContext())
@@ -44,35 +46,14 @@ class Memo : Fragment(R.layout.list_memo),
                 layoutLG.setOnClickListener {
                     layoutPosition = !layoutPosition
                     if (layoutPosition) {
-                        layoutLG.setImageResource(R.drawable.ic_baseline_grid_on_24)
+                        layoutLG.setImageResource(R.drawable.ic_liner_layout)
                         layoutManager = GridLayoutManager(requireContext(), 2)
                     } else {
-                        layoutLG.setImageResource(R.drawable.ic_liner_layout)
+                        layoutLG.setImageResource(R.drawable.ic_grid_layout)
                         layoutManager = LinearLayoutManager(requireContext())
                     }
                 }
-
             }
-
-
-            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-                0,
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-            ) {
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    return false
-                }
-
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val memo = adapterMemo.currentList[viewHolder.adapterPosition]
-                    val sendLaterNet = sendLaterNet()
-                    viewModel.onSwipe(memo, sendLaterNet)
-                }
-            }).attachToRecyclerView(memoRv)
 
             fabAddMemo.setOnClickListener {
                 viewModel.addNewMemo()
@@ -103,7 +84,11 @@ class Memo : Fragment(R.layout.list_memo),
                     is MemoViewModel.MemoEvent.NavigateToEditScreen -> {
                         val action =
                             MemoDirections.actionMemoFragToAddEditMemo(
-                                event.id, event.titleMemo, event.description, event.idMemo, event.testable
+                                event.id,
+                                event.titleMemo,
+                                event.description,
+                                event.idMemo,
+                                event.testable
                             )
                         findNavController().navigate(action)
                     }
@@ -113,10 +98,6 @@ class Memo : Fragment(R.layout.list_memo),
                 }.exhaustive
             }
         }
-    }
-
-    override fun onLongItemClick(memoEntity: MemoEntity) {
-        viewModel.longClick(memoEntity)
     }
 
     private fun sendLaterNet(): Boolean {
@@ -135,5 +116,14 @@ class Memo : Fragment(R.layout.list_memo),
             }
         }
         return true
+    }
+
+    override fun renameItem(memoEntity: MemoEntity) {
+        viewModel.longClick(memoEntity)
+    }
+
+    override fun deleteItem(memoEntity: MemoEntity) {
+        val sendLaterNet = sendLaterNet()
+        viewModel.onSwipe(memoEntity, sendLaterNet)
     }
 }

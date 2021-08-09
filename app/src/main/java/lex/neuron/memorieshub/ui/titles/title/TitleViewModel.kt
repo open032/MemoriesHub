@@ -2,39 +2,45 @@ package lex.neuron.memorieshub.ui.titles.title
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import lex.neuron.memorieshub.data.RoomDao
-import lex.neuron.memorieshub.data.entity.DeleteEntity
-import lex.neuron.memorieshub.data.entity.MemoEntity
-import lex.neuron.memorieshub.data.entity.TitleEntity
+import lex.neuron.memorieshub.data.entity.*
 import lex.neuron.memorieshub.ui.firebase.crud.memotwocolumns.MemoTwoColumnsDelete
 import lex.neuron.memorieshub.ui.firebase.crud.title.OnlyTitleDelete
 import lex.neuron.memorieshub.ui.firebase.crud.title.TitleDelete
+import javax.inject.Inject
 
-class TitleViewModel @ViewModelInject constructor(
+@HiltViewModel
+class TitleViewModel @Inject constructor(
     private val dao: RoomDao,
-    @Assisted private val state: SavedStateHandle
+    private val state: SavedStateHandle
 ) : ViewModel() {
     private val eventChannel = Channel<TitleEvent>()
     private var list: MutableList<Int> = ArrayList()
 
     private val id = state.get<Int>("id")
+    private val name = state.get<String>("name")
     private var dirId = state.get<Int>("dirId") ?: id ?: 1
         set(value) {
             field = value
             state.set("dirId", value)
         }
+    var dirName = state.get<String>("dirName") ?: name ?: "void"
+        set(value) {
+            field = value
+            state.set("dirName", value)
+        }
     val convertDirId = dirId.toString().toInt()
+    val address = dirName.toString()
     val title = dao.getDirByTe(convertDirId).asLiveData()
 
     val titleEvent = eventChannel.receiveAsFlow()
@@ -91,11 +97,11 @@ class TitleViewModel @ViewModelInject constructor(
         dao.getDeleteByName("memo").collect { value ->
             val size = value.size - 1
             for (i in 0..size) {
-                Log.d(lex.neuron.memorieshub.permission.internet.TAG, "pendingDeletion: $value")
+                Log.d(TAG, "pendingDeletion: $value")
                 val crud = MemoTwoColumnsDelete()
                 val memo = MemoEntity(
                     value[i].secondId, "", false,
-                    false, true,"", 0, value[i].id
+                    false, true, "", 0, value[i].id
                 )
                 crud.deleteMemoTwoColumns(memo)
 
@@ -116,14 +122,72 @@ class TitleViewModel @ViewModelInject constructor(
     }
 
     fun onTitleSelected(titleEntity: TitleEntity) = viewModelScope.launch {
+        checkMemoFromFirebase()
         eventChannel.send(TitleEvent.NavigateToAnotherList(titleEntity.id, titleEntity.name))
-        Log.e(TAG, "onTitleSelected: ${titleEntity.id}")
+    }
+
+    private fun checkMemoFromFirebase() = viewModelScope.launch {
+        dao.getMemoFirebase().collect() { value ->
+            if (value.isEmpty()) {
+                Log.d(TAG, "onClick: empty MemoFromFirebase")
+            } else {
+                val size = value.size - 1
+                for (i in 0..size) {
+                    var title = " "
+                    title = if (value[i].title == "") {
+                        " "
+                    } else {
+                        value[i].title
+                    }
+
+                    val newMemo = MemoEntity(
+                        titleList = value[i].titleList,
+                        title = title,
+                        testable = value[i].testable,
+                        sendNetCreateUpdate = false,
+                        sendNetDelete = false,
+                        description = value[i].description,
+                        created = 0,
+                        id = value[i].id
+                    )
+
+                    createMemo(newMemo)
+                }
+            }
+        }
+    }
+
+    private fun createMemo(newMemo: MemoEntity) = viewModelScope.launch {
+        val id = dao.insertMemo(newMemo)
     }
 
     fun arrowBack() = viewModelScope.launch {
         eventChannel.send(TitleEvent.NavigateBack)
     }
 
+    fun checkTitle() = viewModelScope.launch {
+        dao.getTeFirebase().collect() { value ->
+            if (value.isEmpty()) {
+                Log.d(TAG, "titleFromFirebase isEmpty")
+            } else {
+                dao.deleteAllTitleFirebase()
+            }
+        }
+    }
+
+    fun checkMemo() = viewModelScope.launch {
+        dao.getMemoFirebase().collect() { value ->
+
+            if (value.isEmpty()) {
+                Log.e(TAG, "onClick: empty MemoFromFirebase")
+            } else {
+                val size = value.size - 1
+                for (i in 0..size) {
+                    Log.e(TAG, "` ` ` ` ` memoFb ${value[i]}  ", )
+                }
+            }
+        }
+    }
 
     sealed class TitleEvent {
         object NavigateBack : TitleEvent()

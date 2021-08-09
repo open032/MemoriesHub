@@ -1,5 +1,6 @@
 package lex.neuron.memorieshub.ui.titles.addeddir
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -14,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import lex.neuron.memorieshub.R
 import lex.neuron.memorieshub.databinding.AddEditDirBinding
-import lex.neuron.memorieshub.permission.internet.TAG
 import lex.neuron.memorieshub.util.exhaustive
 
 
@@ -26,15 +26,10 @@ class AddEditDir : Fragment(R.layout.add_edit_dir) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         val binding = AddEditDirBinding.bind(view)
 
         binding.apply {
             et.setText(viewModel.dirName)
-            
-            showLog.setOnClickListener {
-                viewModel.showLog()
-            }
 
             fab.setOnClickListener {
                 val sendLaterNet = sendLaterNet()
@@ -43,7 +38,6 @@ class AddEditDir : Fragment(R.layout.add_edit_dir) {
                 val name = et.text.toString()
                 viewModel.onSaveClick(name, sendLaterNet)
             }
-
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

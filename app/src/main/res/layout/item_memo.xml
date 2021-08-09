@@ -31,11 +31,12 @@
                 android:layout_marginEnd="12dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="4dp"
+                android:fontFamily="@font/open_sans"
                 android:text="Example item"
-                android:textColor="#4F6FEF"
                 android:textSize="24dp"
                 android:textStyle="bold" />
 
+<!--            android:textColor="#4F6FEF"-->
 
             <TextView
                 android:id="@+id/tv_memo_des"
@@ -43,13 +44,25 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:fontFamily="@font/open_sans"
                 android:layout_marginStart="12dp"
                 android:layout_marginBottom="12dp"
                 android:layout_marginEnd="12dp"
                 android:text="Example item"
                 android:textColor="@color/my_text_two"
-                android:textSize="18dp" />
+                android:textSize="20dp" />
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/vert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="0dp"
+            android:src="@drawable/ic_more_vert" />
+
     </androidx.cardview.widget.CardView>
 </FrameLayout>

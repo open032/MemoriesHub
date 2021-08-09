@@ -1,11 +1,11 @@
 package lex.neuron.memorieshub.ui.titles.addeddir
 
+import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -13,19 +13,18 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import lex.neuron.memorieshub.data.RoomDao
 import lex.neuron.memorieshub.data.entity.DirEntity
-import lex.neuron.memorieshub.permission.internet.TAG
 import lex.neuron.memorieshub.ui.firebase.crud.dir.DirCreate
 import lex.neuron.memorieshub.ui.firebase.crud.dir.DirUpdate
-import lex.neuron.memorieshub.ui.firebase.crud.read.AccountData
+import javax.inject.Inject
 
-class AddEditDirViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AddEditDirViewModel @Inject constructor(
     private val dao: RoomDao,
-    @Assisted private val state: SavedStateHandle
+    private val state: SavedStateHandle
 ) : ViewModel() {
 
     private val mId = state.get<Int>("id")
     private val name = state.get<String>("name")
-    private var sizeNet: Int = 0
 
     var dirID = state.get<Int>("dirID") ?: mId ?: "void id"
         set(value) {
@@ -64,14 +63,13 @@ class AddEditDirViewModel @ViewModelInject constructor(
                 delay(200)
                 val crud = DirUpdate()
                 crud.updateDir(updateDirEntity)
-//                Log.e(TAG, "changeDir: $updateDirEntity")
             }
             addEditEventChannel.send(AddEditEvent.NavigateBack)
         }
 
     private fun createDir(etName: String, sendLaterNet: Boolean) = viewModelScope.launch {
-        Log.e(TAG, "createDir: ######### $sendLaterNet")
-        val newNameDir = DirEntity(name = etName, sendNetCreateUpdate = sendLaterNet)
+        Log.d(TAG, "createDir: ######### $sendLaterNet")
+        val newNameDir = DirEntity(name = if (etName.isEmpty()) " " else etName, sendNetCreateUpdate = sendLaterNet)
         val id = dao.insertDir(newNameDir)
         Log.d(TAG, "AddEditDirViewModel createDir: hasNet = $sendLaterNet")
 
@@ -90,7 +88,6 @@ class AddEditDirViewModel @ViewModelInject constructor(
         dao.getDirByBool(bol = true).collect { value ->
             val size = value.size - 1
             for (i in 0..size) {
-//                Log.e(TAG, "checkForCompliance: $value")
                 Log.d(TAG, "AddEditDirViewModel checkForCompliance: $value")
                 val crud = DirCreate()
                 crud.createDir(value[i], value[i].id.toLong())
@@ -101,11 +98,6 @@ class AddEditDirViewModel @ViewModelInject constructor(
                 dao.updateDir(dir)
             }
         }
-    }
-
-    fun showLog() = viewModelScope.launch {
-        val crud = AccountData()
-        crud.getAccountData()
     }
 
     sealed class AddEditEvent {

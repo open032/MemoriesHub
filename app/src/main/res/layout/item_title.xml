@@ -14,9 +14,10 @@
         android:layout_marginStart="24dp"
         android:ellipsize="end"
         android:gravity="center_vertical"
+        android:fontFamily="@font/open_sans"
         android:maxLines="1"
         android:textColor="@color/text_color"
-        android:textSize="24dp"
+        android:textSize="20dp"
         tools:text="Example item" />
 
 
@@ -26,6 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="18dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="20dp"
         android:src="@drawable/ic_more_vert" />
 </RelativeLayout>

@@ -1,47 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/my_background">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:src="@drawable/right_top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:orientation="vertical">
+        android:src="@drawable/r_c"
+        app:layout_constraintBottom_toBottomOf="@+id/circular_pv"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/text_sign_in"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign In"
-            android:layout_gravity="center"
-            android:textColor="@color/my_btn_easy"
-            android:textSize="50dp" />
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="180dp"
+        android:layout_height="270dp"
+        android:layout_marginTop="22dp"
+        android:src="@drawable/big_spiral"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="-4dp"
+        tools:ignore="MissingConstraints" />
 
 
-        <Button
-            android:id="@+id/btn_sign_in"
-            android:layout_width="108dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/sign_in"
-            android:background="@color/my_btn_middle"
-            android:layout_gravity="center"/>
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="70dp"
+        android:src="@drawable/left_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="-4dp" />
 
-        <com.github.rahatarmanahmed.cpv.CircularProgressView
-            android:id="@+id/circular_pv"
-            android:layout_gravity="center"
-            android:layout_width="@dimen/loaded_size"
-            android:layout_height="@dimen/loaded_size"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:cpv_animAutostart="true"
-            app:cpv_indeterminate="true"/>
 
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/gorup_logo"
+        app:layout_constraintBottom_toTopOf="@+id/circular_pv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.805"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/btn_sign_in"
+        android:layout_width="188dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="114dp"
+        android:src="@drawable/button_login"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.github.rahatarmanahmed.cpv.CircularProgressView
+        android:id="@+id/circular_pv"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="invisible"
+        app:cpv_animAutostart="true"
+        app:cpv_indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.7" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

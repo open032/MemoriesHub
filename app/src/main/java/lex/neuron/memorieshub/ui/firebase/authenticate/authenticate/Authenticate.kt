@@ -2,7 +2,6 @@
 
 package lex.neuron.memorieshub.ui.firebase.authenticate.authenticate
 
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
@@ -10,17 +9,12 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.AndroidEntryPoint
 import lex.neuron.memorieshub.R
-import lex.neuron.memorieshub.data.MyDatabase
-import lex.neuron.memorieshub.data.RoomDao
-import lex.neuron.memorieshub.data.netnotwork.NetEntity
 import lex.neuron.memorieshub.util.AUTH
 
 @AndroidEntryPoint
 class Authenticate : Fragment(R.layout.frag_authenticate_firebase) {
-//    private lateinit var mAuth: FirebaseAuth
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

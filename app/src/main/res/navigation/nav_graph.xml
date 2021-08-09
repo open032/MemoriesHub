@@ -55,6 +55,9 @@
         <action
             android:id="@+id/action_listMainFrag_to_testing2"
             app:destination="@id/testing2" />
+        <argument
+            android:name="name"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/addEditTitleFrag"
@@ -77,6 +80,9 @@
         <action
             android:id="@+id/action_memoFrag_to_addEditMemo"
             app:destination="@id/addEditMemo" />
+        <argument
+            android:name="name"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/addEditMemo"

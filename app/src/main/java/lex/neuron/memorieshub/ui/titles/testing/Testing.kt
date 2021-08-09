@@ -1,5 +1,6 @@
 package lex.neuron.memorieshub.ui.titles.testing
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,8 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import lex.neuron.memorieshub.R
 import lex.neuron.memorieshub.databinding.FindAPairBinding
-import lex.neuron.memorieshub.permission.internet.TAG
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class Testing : Fragment(R.layout.find_a_pair), TestingAdapterLeft.OnClickListener,
@@ -41,12 +40,6 @@ class Testing : Fragment(R.layout.find_a_pair), TestingAdapterLeft.OnClickListen
 
         val binding = FindAPairBinding.bind(view)
 
-
-
-
-
-
-
         myAdapterLeft = TestingAdapterLeft(this)
         myAdapterRight = TestingAdapterRight(this)
 
@@ -59,16 +52,9 @@ class Testing : Fragment(R.layout.find_a_pair), TestingAdapterLeft.OnClickListen
                 adapter = myAdapterRight
                 layoutManager = LinearLayoutManager(requireContext())
             }
-            btn.setOnClickListener {
-                myAdapterLeft.int = -1
-                myAdapterLeft.notifyDataSetChanged()
-            }
         }
 
         viewModel.getTeMemo.observe(viewLifecycleOwner) {
-//            listLeftIt = viewModel.leftList(it)
-//            listRightIt = viewModel.rightList(it)
-
             for (i in 0..it.size - 1) {
                 if (it[i].testable) {
                     listLeftIt.add(TestingList(it[i].title, it[i].id))
@@ -81,7 +67,6 @@ class Testing : Fragment(R.layout.find_a_pair), TestingAdapterLeft.OnClickListen
 
             Log.d(TAG, "listRandom -> -> -> -> ->  : ${randomListLeft}")
             Log.d(TAG, "listRandom -> -> -> -> ->  : ${randomListRight}")
-//            listLeftRandom.add(TestingList(listLeftIt[random].name, listLeftIt[random].id))
 
             for (i in 0..listLeftIt.size - 1) {
                 listLeftRandom.add(

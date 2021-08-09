@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="@dimen/padding">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -15,45 +15,57 @@
 
             <ImageView
                 android:id="@+id/image_testable"
-                android:layout_width="22dp"
-                android:layout_height="21dp"
-                android:src="@drawable/ic_testable"
+                android:layout_width="@dimen/size_icon_testble"
+                android:layout_height="@dimen/size_icon_testble"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="40dp"
-                android:layout_marginEnd="20dp" />
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_testable" />
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/et_title_memo"
+            <TextView
+                android:text="@string/testing"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Title Memorise"
-                android:textColor="@color/my_text_two"
-                android:textColorHint="@color/my_text_two" />
+                android:layout_height="21dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_testable" />
 
-            <EditText
-                android:id="@+id/et_description_memo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Description"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/my_text_two"
-                android:textColorHint="@color/my_text_two"/>
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/et_title_memo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans"
+            android:hint="Title Memorise"
+            android:textColor="@color/my_text_two"
+            android:textColorHint="@color/my_text_two" />
+
+        <EditText
+            android:id="@+id/et_description_memo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:fontFamily="@font/open_sans"
+            android:hint="Description"
+            android:textColor="@color/my_text_two"
+            android:textColorHint="@color/my_text_two" />
 
         <TextView
             android:id="@+id/text_view_date_created_memo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans"
             android:text="Date created:"
             android:textColor="@color/my_text_two" />
 
-        <Button
-            android:id="@+id/show_testable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="show testable"/>
 
     </LinearLayout>
 

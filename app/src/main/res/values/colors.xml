@@ -21,6 +21,7 @@
     <color name="fab_add_tint">#E5E5E5</color>
     <color name="fab_background_tint">#636B7E</color>
 
+    <color name="background_btn_sign_in">#E5E5E5</color>
     <color name="text_color">#E5E5E5</color>
 
 </resources>

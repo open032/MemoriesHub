@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="wrap_content"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
     android:layout_marginBottom="10dp"
@@ -21,14 +21,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/raleway_bold"
-            android:maxLines="1"
-            android:text="Example item"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="31dp"
+            android:layout_marginTop="31dp"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/open_sans"
             android:textColor="@color/text_color"
-            android:textSize="15dp" />
-
+            android:textSize="20dp" />
 
 
     </RelativeLayout>

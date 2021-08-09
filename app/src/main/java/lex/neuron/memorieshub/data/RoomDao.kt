@@ -2,10 +2,7 @@ package lex.neuron.memorieshub.data
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import lex.neuron.memorieshub.data.entity.DeleteEntity
-import lex.neuron.memorieshub.data.entity.DirEntity
-import lex.neuron.memorieshub.data.entity.MemoEntity
-import lex.neuron.memorieshub.data.entity.TitleEntity
+import lex.neuron.memorieshub.data.entity.*
 
 
 @Dao
@@ -17,16 +14,19 @@ interface RoomDao {
     suspend fun insertMemo(memoEntity: MemoEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMemoFromFirebase(memoFromFirebase: MemoFromFirebase): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTe(titleEntity: TitleEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTeFromFirebase(titleEntity: TitleFromFirebase): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDir(dirEntity: DirEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDelete(deleteEntity: DeleteEntity): Long
-
-    /*@Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNet(netEntity: NetEntity): Long*/
 
 
     // ********** Update **********
@@ -47,6 +47,9 @@ interface RoomDao {
     @Delete
     suspend fun deleteMemo(memoEntity: MemoEntity)
 
+    @Query("DELETE FROM memo_from_firebase")
+    suspend fun deleteAllMemoFirebase()
+
     @Delete
     suspend fun deleteTe(titleEntity: TitleEntity)
 
@@ -60,13 +63,19 @@ interface RoomDao {
     @Query("DELETE FROM title_table")
     suspend fun deleteAllTitle()
 
+    @Query("DELETE FROM title_form_firebase")
+    suspend fun deleteAllTitleFirebase()
+
     @Query("DELETE FROM dir_table")
     suspend fun deleteAllDir()
 
-// ********** Query **********
+    // ********** Query **********
 
 
     // Memo
+    @Query("SELECT * FROM memo_from_firebase")
+    fun getMemoFirebase(): Flow<List<MemoFromFirebase>>
+
     @Query("SELECT * FROM memo_table")
     fun getMemo(): Flow<List<MemoEntity>>
 
@@ -81,8 +90,8 @@ interface RoomDao {
 
 
     // TitleEntity
-    @Query("SELECT * FROM title_table")
-    fun getTe(): Flow<List<TitleEntity>>
+    @Query("SELECT * FROM title_form_firebase")
+    fun getTeFirebase(): Flow<List<TitleFromFirebase>>
 
     @Query("SELECT * FROM title_table WHERE id = :id")
     suspend fun getTeById(id: Int): TitleEntity
@@ -92,6 +101,7 @@ interface RoomDao {
 
     @Query("SELECT * FROM title_table WHERE sendNetCreateUpdate = :bol")
     fun getTitleByBool(bol: Boolean): Flow<List<TitleEntity>>
+
 
     // Dir
     @Query("SELECT * FROM dir_table")
@@ -113,10 +123,4 @@ interface RoomDao {
 
     @Query("SELECT * FROM delete_table WHERE name = :name")
     fun getDeleteByName(name: String): Flow<List<DeleteEntity>>
-/* // Net
- @Query("SELECT * FROM net_table")
- fun getNet(): Flow<List<NetEntity>>
-
- @Query("SELECT * FROM net_table WHERE id = :id")
- suspend fun getNetById(id: Int): NetEntity*/
 }

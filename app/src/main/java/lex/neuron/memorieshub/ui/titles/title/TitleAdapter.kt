@@ -1,6 +1,7 @@
 package lex.neuron.memorieshub.ui.titles.title
 
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,18 +11,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import lex.neuron.memorieshub.R
-import lex.neuron.memorieshub.data.entity.DirEntity
 import lex.neuron.memorieshub.data.entity.TitleEntity
 import lex.neuron.memorieshub.databinding.ItemTitleBinding
-import lex.neuron.memorieshub.permission.internet.TAG
-import lex.neuron.memorieshub.ui.titles.dir.DirAdapter
 
 
 class TitleAdapter(
-    private val renameItem: TitleAdapter.RenameItem,
-    private val deleteItem: TitleAdapter.DeleteItem,
-    private val testingItem: TitleAdapter.TestingItem,
-    private val longListener: OnLongItemClickListener,
+    private val renameItem: RenameItem,
+    private val deleteItem: DeleteItem,
+    private val testingItem: TestingItem,
     private val clickListener: OnClickListener
 ) :
     ListAdapter<TitleEntity, TitleAdapter.ListMainViewHolder>(DiffCallback()) {
@@ -104,7 +101,7 @@ class TitleAdapter(
                         true
                     }
 
-                    popup.show()//showing popup menu
+                    popup.show()
                 }
             }
         }
@@ -125,10 +122,6 @@ class TitleAdapter(
 
     interface OnClickListener {
         fun onItemClick(titleEntity: TitleEntity)
-    }
-
-    interface OnLongItemClickListener {
-        fun onLongItemClick(titleEntity: TitleEntity)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<TitleEntity>() {

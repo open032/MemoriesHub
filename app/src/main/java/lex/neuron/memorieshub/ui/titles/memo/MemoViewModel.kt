@@ -1,12 +1,12 @@
 package lex.neuron.memorieshub.ui.titles.memo
 
+import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -15,21 +15,29 @@ import kotlinx.coroutines.launch
 import lex.neuron.memorieshub.data.RoomDao
 import lex.neuron.memorieshub.data.entity.DeleteEntity
 import lex.neuron.memorieshub.data.entity.MemoEntity
-import lex.neuron.memorieshub.permission.internet.TAG
 import lex.neuron.memorieshub.ui.firebase.crud.memotwocolumns.MemoTwoColumnsDelete
+import javax.inject.Inject
 
-class MemoViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MemoViewModel @Inject constructor(
     private val dao: RoomDao,
-    @Assisted private val state: SavedStateHandle
+    private val state: SavedStateHandle
 ) : ViewModel() {
 
     private val eventChannel = Channel<MemoEvent>()
 
     private val id = state.get<Int>("id")
+    private val name = state.get<String>("name")
     private var tcId = state.get<Int>("tcId") ?: id ?: "void tcId"
         set(value) {
             field = value
             state.set("tcId", value)
+        }
+
+    var titleName = state.get<String>("titleName") ?: name ?: "void"
+        set(value) {
+            field = value
+            state.set("titleName", value)
         }
     val convertTcId: Int = tcId.toString().toInt()
 
@@ -63,7 +71,7 @@ class MemoViewModel @ViewModelInject constructor(
                 val crud = MemoTwoColumnsDelete()
                 val memo = MemoEntity(
                     value[i].secondId, "", false,
-                    false, true,"", 0, value[i].id
+                    false, true, "", 0, value[i].id
                 )
                 crud.deleteMemoTwoColumns(memo)
 
@@ -86,6 +94,10 @@ class MemoViewModel @ViewModelInject constructor(
                 memoEntity.title, memoEntity.testable, memoEntity.description, memoEntity.titleList
             )
         )
+    }
+
+    fun checkMemo() = viewModelScope.launch {
+        dao.deleteAllMemoFirebase()
     }
 
     sealed class MemoEvent {

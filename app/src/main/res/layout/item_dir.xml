@@ -23,11 +23,11 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/raleway_bold"
+            android:fontFamily="@font/open_sans"
             android:maxLines="1"
             android:text="Example item"
             android:textColor="@color/text_color"
-            android:textSize="15dp" />
+            android:textSize="22dp" />
 
         <ImageView
             android:id="@+id/vert"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="18dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="0dp"
             android:src="@drawable/ic_more_vert" />
 
     </RelativeLayout>

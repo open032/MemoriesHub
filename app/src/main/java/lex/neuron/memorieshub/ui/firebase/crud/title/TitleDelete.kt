@@ -1,7 +1,5 @@
 package lex.neuron.memorieshub.ui.firebase.crud.title
 
-import android.content.ContentValues
-import android.util.Log
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import lex.neuron.memorieshub.data.entity.TitleEntity

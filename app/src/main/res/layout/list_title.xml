@@ -18,29 +18,39 @@
 
             <ImageView
                 android:id="@+id/image_back"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="34dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginTop="30dp"
                 android:src="@drawable/ic_arrow_1" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/open_sans"
+                android:hint="address"
+                android:textSize="18dp" />
 
 
             <ImageView
                 android:id="@+id/layout_l_g"
-                android:layout_width="22dp"
-                android:layout_height="21dp"
-                android:src="@drawable/ic_liner_layout"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="40dp"
-                android:layout_marginEnd="20dp" />
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_grid_layout" />
 
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/main_list_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"/>
     </LinearLayout>
 
 
@@ -49,8 +59,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="62dp"
         android:backgroundTint="@color/fab_background_tint"
         app:backgroundTint="#636B7E"
         app:fabSize="normal"

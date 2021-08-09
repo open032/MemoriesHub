@@ -1,5 +1,6 @@
 package lex.neuron.memorieshub.ui.titles.dir
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import lex.neuron.memorieshub.R
 import lex.neuron.memorieshub.data.entity.DirEntity
 import lex.neuron.memorieshub.databinding.ItemDirBinding
-import lex.neuron.memorieshub.permission.internet.TAG
 
 class DirAdapter(
     private val renameItem: RenameItem,
@@ -19,7 +19,6 @@ class DirAdapter(
     private val longListener: OnLongItemClickListener,
     private val clickListener: OnClickListener
 ) :
-/*View.OnCreateContextMenuListener,*/
     ListAdapter<DirEntity, DirAdapter.ListDirViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListDirViewHolder {
@@ -91,7 +90,7 @@ class DirAdapter(
                         true
                     }
 
-                    popup.show()//showing popup menu
+                    popup.show()
                     Log.e(TAG, "bind: ")
                 }
             }

@@ -2,58 +2,46 @@ package lex.neuron.memorieshub.ui.titles.dir
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import lex.neuron.memorieshub.data.RoomDao
-import lex.neuron.memorieshub.data.entity.DeleteEntity
-import lex.neuron.memorieshub.data.entity.DirEntity
-import lex.neuron.memorieshub.data.entity.MemoEntity
-import lex.neuron.memorieshub.data.entity.TitleEntity
-import lex.neuron.memorieshub.ui.firebase.crud.dir.DirCreate
+import lex.neuron.memorieshub.data.entity.*
 import lex.neuron.memorieshub.ui.firebase.crud.dir.DirDelete
 import lex.neuron.memorieshub.ui.firebase.crud.dir.MemoForDelete
 import lex.neuron.memorieshub.ui.firebase.crud.dir.OnlyDirDelete
 import lex.neuron.memorieshub.ui.firebase.crud.memotwocolumns.MemoTwoColumnsDelete
 import lex.neuron.memorieshub.ui.firebase.crud.title.OnlyTitleDelete
 import lex.neuron.memorieshub.util.AUTH
+import lex.neuron.memorieshub.util.DIR
+import lex.neuron.memorieshub.util.MEMO_TWO_COLUMNS
+import lex.neuron.memorieshub.util.TITLE
+import javax.inject.Inject
 
-class DirViewModel @ViewModelInject constructor(
+@HiltViewModel
+class DirViewModel @Inject constructor(
     private val dao: RoomDao,
-    @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
     private val eventChannel = Channel<DirEvent>()
     private var listTitle: MutableList<Int> = ArrayList()
     private var listMemo: MutableList<MemoForDelete> = ArrayList()
 
-
-
-
-    private val id = state.get<Int>("id")
-    var dirId = state.get<Int>("dirId") ?: id ?: 1
-        set(value) {
-            field = value
-            state.set("dirId", value)
-        }
-
     val dir = dao.getDir().asLiveData()
     val dirEvent = eventChannel.receiveAsFlow()
 
-    /* fun showDir() = viewModelScope.launch {
-         dao.getDir().collect { value ->
-             Log.e(TAG, "showDir: $value")
-         }
-     }*/
+
+    fun showList() = viewModelScope.launch {
+        dao.getDir()
+    }
 
     // List to remove nested elements
     fun titleList(dir: DirEntity) = viewModelScope.launch {
@@ -110,11 +98,11 @@ class DirViewModel @ViewModelInject constructor(
         dao.getDeleteByName("memo").collect { value ->
             val size = value.size - 1
             for (i in 0..size) {
-                Log.d(lex.neuron.memorieshub.permission.internet.TAG, "pendingDeletion: $value")
+                Log.d(TAG, "pendingDeletion: $value")
                 val crud = MemoTwoColumnsDelete()
                 val memo = MemoEntity(
                     value[i].secondId, "", false,
-                    false,true, "", 0, value[i].id
+                    false, true, "", 0, value[i].id
                 )
                 crud.deleteMemoTwoColumns(memo)
 
@@ -153,8 +141,38 @@ class DirViewModel @ViewModelInject constructor(
     }
 
     fun onClick(dirEntity: DirEntity) = viewModelScope.launch {
-        eventChannel.send(DirEvent.NavigateToTitleList(dirEntity.id))
+        checkTitle()
+        eventChannel.send(DirEvent.NavigateToTitleList(dirEntity.id, dirEntity.name))
 
+    }
+
+    private fun checkTitle() = viewModelScope.launch {
+        dao.getTeFirebase().collect() { value ->
+            if (value.isEmpty()) {
+                Log.d(TAG, "onClick: empty TitleFromFirebase")
+            } else {
+                val size = value.size - 1
+                for (i in 0..size) {
+                    var name = " "
+                    name = if (value[i].name == "") {
+                        " "
+                    } else {
+                        value[i].name
+                    }
+
+                    val newTitle = TitleEntity(
+                        dirList = value[i].dirList,
+                        name = name,
+                        sendNetCreateUpdate = false,
+                        sendNetDelete = false,
+                        created = 0,
+                        id = value[i].id
+                    )
+
+                    createTitle(newTitle)
+                }
+            }
+        }
     }
 
     fun renameItem(dirEntity: DirEntity) = viewModelScope.launch {
@@ -164,7 +182,6 @@ class DirViewModel @ViewModelInject constructor(
     fun addNewItem() = viewModelScope.launch {
 
         Log.d(TAG, "addNewItem: ")
-//        checkForCompliance()
         eventChannel.send(DirEvent.NavigateToAddDir)
     }
 
@@ -174,32 +191,140 @@ class DirViewModel @ViewModelInject constructor(
         eventChannel.send(DirEvent.NavigateToLogIn)
     }
 
-    fun deleteAllRoom() = viewModelScope.launch {
-        dao.deleteAllMemo()
-        dao.deleteAllTitle()
-        dao.deleteAllDir()
+
+    fun deleteAllRoom(sendLaterNet: Boolean) = viewModelScope.launch {
+        if (!sendLaterNet) {
+            dao.deleteAllMemo()
+            dao.deleteAllTitle()
+            dao.deleteAllDir()
+            Log.e(TAG, "if net: ${Thread.currentThread().name}")
+        }
     }
 
-    /*private fun checkForCompliance() = viewModelScope.launch {
-        dao.getDirByBool(bol = false).collect { value ->
-            val size = value.size - 1
-            for (i in 0..size) {
-                Log.e(lex.neuron.memorieshub.permission.internet.TAG, "checkForCompliance: $value")
-                Log.d(lex.neuron.memorieshub.permission.internet.TAG, "AddEditDirViewModel checkForCompliance: $value")
-                val crud = DirCreate()
-                crud.createDir(value[i], value[i].id.toLong())
-                val dir = DirEntity(name = value[i].name, hasNet = true,
-                    created = value[i].created, id = value[i].id )
-                dao.updateDir(dir)
-            }
-        }
-    }*/
 
+    fun createMemoFromFirebase() {
+        val uid = AUTH.currentUser?.uid.toString()
+        var ref = FirebaseDatabase.getInstance().getReference(MEMO_TWO_COLUMNS).child(uid)
+        val menuListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds: DataSnapshot in dataSnapshot.children) {
+                    var title = " "
+                    var description = " "
+                    title = if (ds.child("name").value.toString() == "") {
+                        " "
+                    } else {
+                        ds.child("name").value.toString()
+                    }
+                    description = if (ds.child("description").value.toString() == "") {
+                        " "
+                    } else {
+                        ds.child("description").value.toString()
+                    }
+                    val newMemo = MemoFromFirebase(
+                        titleList = ds.child("idParent").value.toString().toInt(),
+                        title = title,
+                        testable = ds.child("testable").value.toString().toBoolean(),
+                        sendNetCreateUpdate = false,
+                        sendNetDelete = false,
+                        description = description,
+                        created = 0,
+                        id = ds.child("id").value.toString().toInt()
+                    )
+                    Log.d(TAG, "onDataChange: $newMemo")
+
+
+                    createMemoFromFirebase(newMemo)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        }
+        ref.addListenerForSingleValueEvent(menuListener)
+    }
+
+    fun createTitleFromFirebase() {
+        val uid = AUTH.currentUser?.uid.toString()
+        var ref = FirebaseDatabase.getInstance().getReference(TITLE).child(uid)
+        val menuListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds: DataSnapshot in dataSnapshot.children) {
+                    Log.d(TAG, "* * * * * ${ds.child("idParent")} ")
+
+                    var name = " "
+                    name = if (ds.child("name").value.toString() == "") {
+                        " "
+                    } else {
+                        ds.child("name").value.toString()
+                    }
+
+                    val newTitle = TitleFromFirebase(
+                        dirList = ds.child("idParent").value.toString().toInt(),
+                        name = name,
+                        sendNetCreateUpdate = false,
+                        sendNetDelete = false,
+                        created = 0,
+                        id = ds.child("id").value.toString().toInt()
+                    )
+                    createNewTitleFromFirebase(newTitle)
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {}
+        }
+        ref.addListenerForSingleValueEvent(menuListener)
+    }
+
+
+    fun createDir() {
+        val uid = AUTH.currentUser?.uid.toString()
+        var ref = FirebaseDatabase.getInstance().getReference(DIR).child(uid)
+        val menuListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds: DataSnapshot in dataSnapshot.children) {
+
+
+                    var name = " "
+                    name = if (ds.child("name").value.toString() == "") {
+                        " "
+                    } else {
+                        ds.child("name").value.toString()
+                    }
+
+                    val newNameDir = DirEntity(
+                        name = name,
+                        sendNetCreateUpdate = false,
+                        sendNetDelete = false,
+                        created = 0,
+                        id = ds.child("id").value.toString().toInt()
+                    )
+                    createDir(newNameDir)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        }
+        ref.addListenerForSingleValueEvent(menuListener)
+    }
+
+    fun createTitle(newTitle: TitleEntity) = viewModelScope.launch {
+        val id = dao.insertTe(newTitle)
+    }
+
+    private fun createNewTitleFromFirebase(newTitle: TitleFromFirebase) = viewModelScope.launch {
+        val id = dao.insertTeFromFirebase(newTitle)
+    }
+
+    private fun createMemoFromFirebase(newMemo: MemoFromFirebase) = viewModelScope.launch {
+        val id = dao.insertMemoFromFirebase(newMemo)
+    }
+
+    fun createDir(newDir: DirEntity) = viewModelScope.launch {
+        val id = dao.insertDir(newDir)
+    }
 
     sealed class DirEvent {
         object NavigateToAddDir : DirEvent()
         object NavigateToLogIn : DirEvent()
-        data class NavigateToTitleList(val id: Int) : DirEvent()
+        data class NavigateToTitleList(val id: Int, val name: String) : DirEvent()
         data class NavigateToEditTitleDir(val id: Int, val name: String) : DirEvent()
     }
 }

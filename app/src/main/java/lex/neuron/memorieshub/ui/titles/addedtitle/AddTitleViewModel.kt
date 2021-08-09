@@ -1,11 +1,11 @@
 package lex.neuron.memorieshub.ui.titles.addedtitle
 
+import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -13,13 +13,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import lex.neuron.memorieshub.data.RoomDao
 import lex.neuron.memorieshub.data.entity.TitleEntity
-import lex.neuron.memorieshub.permission.internet.TAG
 import lex.neuron.memorieshub.ui.firebase.crud.title.TitleCreate
 import lex.neuron.memorieshub.ui.firebase.crud.title.TitleUpdate
+import javax.inject.Inject
 
-class AddTitleViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AddTitleViewModel @Inject constructor(
     private val dao: RoomDao,
-    @Assisted private val state: SavedStateHandle
+    private val state: SavedStateHandle
 ) : ViewModel() {
 
     private val mId = state.get<Int>("id")
@@ -70,7 +71,8 @@ class AddTitleViewModel @ViewModelInject constructor(
     private fun createTitle(etName: String, sendLaterNet: Boolean) = viewModelScope.launch {
         Log.d(TAG, "createTitleTitle: $sendLaterNet")
         Log.d(TAG, "createTitleTitle: $etName")
-        val newTitle = TitleEntity(dirList = id, name = etName, sendNetCreateUpdate = sendLaterNet)
+        val newTitle = TitleEntity(dirList = id, name = if (etName.isEmpty()) " " else etName,
+            sendNetCreateUpdate = sendLaterNet)
         val idTitle = dao.insertTe(newTitle)
 
         if (!sendLaterNet) {
@@ -99,14 +101,6 @@ class AddTitleViewModel @ViewModelInject constructor(
             }
         }
     }
-
-    private fun updateTitle(updateTitleEntity: TitleEntity) = viewModelScope.launch {
-        dao.updateTe(updateTitleEntity)
-        val crud = TitleUpdate()
-        crud.updateTitle(updateTitleEntity)
-        addEditTitleEventChannel.send(AddEditTitleEvent.NavigateBack)
-    }
-
 
     sealed class AddEditTitleEvent {
         object NavigateBack : AddEditTitleEvent()

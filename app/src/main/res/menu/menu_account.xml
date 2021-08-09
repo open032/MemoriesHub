@@ -5,10 +5,7 @@
         android:id="@+id/log_out"
         android:title="Log Out" />
     <item
-        android:id="@+id/cloud"
+        android:id="@+id/dir"
         android:title="Do it like in the cloud" />
-    <!-- <item
-         android:id="@+id/nav_third_fragment"
-         android:title="Third"
-         app:showAsAction="ifRoom"/>-->
+
 </menu>

@@ -1,16 +1,13 @@
 package lex.neuron.memorieshub.ui.titles.testing
 
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import lex.neuron.memorieshub.databinding.TestingItemBinding
-import lex.neuron.memorieshub.permission.internet.TAG
 
-class TestingAdapterRight(private val clickListener: TestingAdapterRight.OnClickListenerRight) :
+class TestingAdapterRight(private val clickListener: OnClickListenerRight) :
     ListAdapter<TestingList, TestingAdapterRight.ListRightViewHolder>(DiffCallback()) {
 
     var int = 1
@@ -39,22 +36,14 @@ class TestingAdapterRight(private val clickListener: TestingAdapterRight.OnClick
                     if (position != RecyclerView.NO_POSITION) {
                         var leftList = getItem(position)
                         clickListener.onItemClickRight(leftList.id, position)
-//                        Log.d(TAG, "leftLst getItem: $leftList")
-                        /*if (int == 1) {
-                            int++
-                            root.setCardBackgroundColor(Color.parseColor("#006600"))
-                        }*/
-//                        Log.d(TAG, "ClickListener root: $position")
                     }
                 }
             }
         }
 
-
         fun bind(memoEntity: TestingList) {
             binding.apply {
                 tv.text = memoEntity.name
-
             }
         }
     }

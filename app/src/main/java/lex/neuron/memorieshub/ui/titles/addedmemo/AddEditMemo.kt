@@ -1,5 +1,6 @@
 package lex.neuron.memorieshub.ui.titles.addedmemo
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -14,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import lex.neuron.memorieshub.R
 import lex.neuron.memorieshub.databinding.AddEditMemoBinding
-import lex.neuron.memorieshub.permission.internet.TAG
 import lex.neuron.memorieshub.util.exhaustive
 
 @AndroidEntryPoint
@@ -30,15 +30,10 @@ class AddEditMemo : Fragment(R.layout.add_edit_memo) {
             etTitleMemo.setText(viewModel.title)
             etDescriptionMemo.setText(viewModel.desc)
 
-//^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-
-            showTestable.setOnClickListener {
-                Log.d(TAG, "showTestable: ${viewModel.testableVM}")
-            }
 
 //          Input, show testable
             var testable = viewModel.testableVM
-            Log.e(TAG, "viewModel.testableVM: ${viewModel.testableVM}", )
+            Log.d(TAG, "viewModel.testableVM: ${viewModel.testableVM}")
 
             if (testable) {
                 imageTestable.setImageResource(R.drawable.ic_testable)
@@ -50,14 +45,9 @@ class AddEditMemo : Fragment(R.layout.add_edit_memo) {
             }
 
 
-
-
             imageTestable.setOnClickListener {
                 testable = !testable
-
                 viewModel.changeTestable(sendLaterNet())
-
-
 
                 if (testable) {
                     Log.d(TAG, "imageTestable: $  TRUE  $$")
@@ -69,8 +59,8 @@ class AddEditMemo : Fragment(R.layout.add_edit_memo) {
                 }
             }
 
+//  ^  ^  ^  ^  ^  ^  ^  ^  ^  ^  end testable  ^  ^  ^  ^  ^  ^  ^  ^  ^  ^  ^  ^  ^  ^  ^  ^  ^
 
-//_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
             fabSaveMemo.setOnClickListener {
                 val sendLaterNet = sendLaterNet()
